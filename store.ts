@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Project, ContactInfo, HomeInfo, AboutInfo, ClientList } from './types';
 import { 
   INITIAL_PROJECTS, 
@@ -10,132 +10,117 @@ import {
   INITIAL_CATEGORIES
 } from './constants';
 
-const createStore = <T>(key: string, initialValue: T) => {
-  const eventName = `store_update_${key}`;
-
-  return () => {
-    const [state, setState] = useState<T>(() => {
-      try {
-        const saved = localStorage.getItem(key);
-        if (!saved) return initialValue;
-        const parsed = JSON.parse(saved);
-        
-        // 배열인 경우 그대로 반환, 객체인 경우 초기값과 병합하여 새로운 필드 누락 방지
-        if (Array.isArray(initialValue)) {
-          return parsed;
-        }
-        return { ...initialValue, ...parsed };
-      } catch (e) {
-        console.error(`Failed to load ${key} from localStorage`, e);
-        return initialValue;
-      }
-    });
-
-    const updateState = useCallback((newValue: T | ((prev: T) => T)) => {
-      setState((prev) => {
-        const next = typeof newValue === 'function' ? (newValue as Function)(prev) : newValue;
-        localStorage.setItem(key, JSON.stringify(next));
-        window.dispatchEvent(new CustomEvent(eventName, { detail: next }));
-        return next;
-      });
-    }, []);
-
-    useEffect(() => {
-      const handleUpdate = (e: any) => {
-        setState(e.detail);
-      };
-      
-      const handleStorage = (e: StorageEvent) => {
-        if (e.key === key && e.newValue) {
-          try {
-            const parsed = JSON.parse(e.newValue);
-            setState(Array.isArray(initialValue) ? parsed : { ...initialValue, ...parsed });
-          } catch (err) {
-            console.error(err);
-          }
-        }
-      };
-
-      window.addEventListener(eventName, handleUpdate);
-      window.addEventListener('storage', handleStorage);
-      return () => {
-        window.removeEventListener(eventName, handleUpdate);
-        window.removeEventListener('storage', handleStorage);
-      };
-    }, []);
-
-    return [state, updateState] as const;
-  };
-};
-
-const useCategoriesInternal = createStore('flips_categories', INITIAL_CATEGORIES);
 export const useCategoryStore = () => {
-  const [categories, setCategories] = useCategoriesInternal();
-  
+  const [categories, setCategories] = useState<string[]>(() => {
+    const saved = localStorage.getItem('flips_categories');
+    return saved ? JSON.parse(saved) : INITIAL_CATEGORIES;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('flips_categories', JSON.stringify(categories));
+  }, [categories]);
+
   const addCategory = (name: string) => {
     if (!categories.includes(name)) {
-      setCategories([...categories, name]);
+      setCategories(prev => [...prev, name]);
     }
   };
 
   const deleteCategory = (name: string) => {
-    setCategories(categories.filter(c => c !== name));
+    setCategories(prev => prev.filter(c => c !== name));
   };
 
   const updateCategories = (newList: string[]) => {
     setCategories(newList);
   };
 
-  return { categories: categories || [], addCategory, deleteCategory, updateCategories };
+  return { categories, addCategory, deleteCategory, updateCategories };
 };
 
-const useProjectsInternal = createStore('flips_projects', INITIAL_PROJECTS);
 export const useProjectStore = () => {
-  const [projects, setProjects] = useProjectsInternal();
+  const [projects, setProjects] = useState<Project[]>(() => {
+    const saved = localStorage.getItem('flips_projects');
+    return saved ? JSON.parse(saved) : INITIAL_PROJECTS;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('flips_projects', JSON.stringify(projects));
+  }, [projects]);
 
   const addProject = (project: Project) => {
-    setProjects([project, ...(projects || [])]);
+    setProjects(prev => [project, ...prev]);
   };
 
   const updateProject = (id: string, updated: Project) => {
-    setProjects((projects || []).map(p => p.id === id ? updated : p));
+    setProjects(prev => prev.map(p => p.id === id ? updated : p));
   };
 
   const deleteProject = (id: string) => {
-    setProjects((projects || []).filter(p => p.id !== id));
+    setProjects(prev => prev.filter(p => p.id !== id));
   };
 
   const reorderProjects = (newProjects: Project[]) => {
     setProjects(newProjects);
   };
 
-  return { projects: projects || [], addProject, updateProject, deleteProject, reorderProjects };
+  return { projects, addProject, updateProject, deleteProject, reorderProjects };
 };
 
-const useHomeInternal = createStore('flips_home', INITIAL_HOME_INFO);
 export const useHomeStore = () => {
-  const [home, setHome] = useHomeInternal();
+  const [home, setHome] = useState<HomeInfo>(() => {
+    const saved = localStorage.getItem('flips_home');
+    return saved ? JSON.parse(saved) : INITIAL_HOME_INFO;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('flips_home', JSON.stringify(home));
+  }, [home]);
+
   const updateHome = (newHome: HomeInfo) => setHome(newHome);
   return { home, updateHome };
 };
 
-const useAboutInternal = createStore('flips_about', INITIAL_ABOUT_INFO);
 export const useAboutStore = () => {
-  const [about, setAbout] = useAboutInternal();
+  const [about, setAbout] = useState<AboutInfo>(() => {
+    const saved = localStorage.getItem('flips_about');
+    return saved ? JSON.parse(saved) : INITIAL_ABOUT_INFO;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('flips_about', JSON.stringify(about));
+  }, [about]);
+
   const updateAbout = (newAbout: AboutInfo) => setAbout(newAbout);
   return { about, updateAbout };
 };
 
-const useClientsInternal = createStore('flips_clients', INITIAL_CLIENT_DATA);
 export const useClientStore = () => {
-  const [clientData, setClientData] = useClientsInternal();
+  const [clientData, setClientData] = useState<ClientList>(() => {
+    const saved = localStorage.getItem('flips_clients');
+    return saved ? JSON.parse(saved) : INITIAL_CLIENT_DATA;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('flips_clients', JSON.stringify(clientData));
+  }, [clientData]);
+
   const updateClients = (newClients: ClientList) => setClientData(newClients);
   return { clientData, updateClients };
 };
 
-const useContactInternal = createStore('flips_contact', INITIAL_CONTACT_INFO);
 export const useContactStore = () => {
-  const [contact, setContact] = useContactInternal();
-  const updateContact = (newContact: ContactInfo) => setContact(newContact);
+  const [contact, setContact] = useState<ContactInfo>(() => {
+    const saved = localStorage.getItem('flips_contact');
+    return saved ? JSON.parse(saved) : INITIAL_CONTACT_INFO;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('flips_contact', JSON.stringify(contact));
+  }, [contact]);
+
+  const updateContact = (newContact: ContactInfo) => {
+    setContact(newContact);
+  };
+
   return { contact, updateContact };
 };

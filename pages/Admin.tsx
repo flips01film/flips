@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   useProjectStore, 
@@ -41,15 +41,6 @@ const Admin: React.FC = () => {
   const [aboutDraft, setAboutDraft] = useState<AboutInfo>(about);
   const [clientsInput, setClientsInput] = useState(clientData.clients.join(', '));
   const [artistsInput, setArtistsInput] = useState(clientData.artists.join(', '));
-
-  // Update drafts when store changes (e.g. initial load or cross-tab sync)
-  useEffect(() => {
-    setContactDraft(contact);
-    setHomeDraft(home);
-    setAboutDraft(about);
-    setClientsInput(clientData.clients.join(', '));
-    setArtistsInput(clientData.artists.join(', '));
-  }, [contact, home, about, clientData]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -246,7 +237,7 @@ const Admin: React.FC = () => {
                     <div className="flex flex-col gap-3">
                       {(localThumbnail || editingProject?.thumbnail) && (
                         <div className="w-full aspect-video bg-zinc-900 border border-white/5 overflow-hidden">
-                          <img src={localThumbnail || editingProject?.thumbnail} className="w-full h-full object-cover" alt="Preview" />
+                          <img src={localThumbnail || editingProject?.thumbnail} className="w-full h-full object-cover grayscale" alt="Preview" />
                         </div>
                       )}
                       <input type="file" accept="image/*" ref={fileInputRef} onChange={(e) => handleFileChange(e, 'project')} className="text-[10px] text-[#555] file:mr-4 file:py-2 file:px-4 file:border-0 file:text-[10px] file:font-bold file:tracking-widest file:bg-zinc-800 file:text-white cursor-pointer" />
@@ -296,7 +287,7 @@ const Admin: React.FC = () => {
                           </button>
                         </div>
                         <div className="w-16 h-10 bg-zinc-900 overflow-hidden hidden sm:block">
-                          <img src={p.thumbnail} className="w-full h-full object-cover" alt="" />
+                          <img src={p.thumbnail} className="w-full h-full object-cover grayscale" alt="" />
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
@@ -324,7 +315,7 @@ const Admin: React.FC = () => {
                 <form onSubmit={handleAddCategory} className="space-y-5">
                   <AdminInput 
                     label="CATEGORY NAME" 
-                    value={newCategoryName} 
+                    defaultValue={newCategoryName} 
                     onChange={v => setNewCategoryName(v)}
                     required 
                   />
@@ -356,29 +347,29 @@ const Admin: React.FC = () => {
             <section className="bg-zinc-950 p-8 border border-white/5 max-w-2xl mx-auto">
               <h2 className="text-[11px] tracking-[0.3em] text-white mb-8 uppercase font-bold border-b border-white/10 pb-4">HOME SETTINGS</h2>
               <form onSubmit={handleSaveHome} className="space-y-6">
-                <AdminInput label="HERO VIDEO URL (MP4)" value={homeDraft.heroVideo} onChange={v => setHomeDraft(p => ({...p, heroVideo: v}))} />
+                <AdminInput label="HERO VIDEO URL (MP4)" defaultValue={home.heroVideo} onChange={v => setHomeDraft(p => ({...p, heroVideo: v}))} />
                 
                 <div className="space-y-2">
                     <label className="text-[9px] text-[#555] uppercase tracking-widest font-bold">HERO BACKGROUND IMAGE</label>
                     <div className="flex flex-col gap-3">
-                      {(localHomeImage || homeDraft.heroImage) && (
+                      {(localHomeImage || home.heroImage) && (
                         <div className="w-full aspect-video bg-zinc-900 border border-white/5 overflow-hidden">
-                          <img src={localHomeImage || homeDraft.heroImage} className="w-full h-full object-cover" alt="Home Hero Preview" />
+                          <img src={localHomeImage || home.heroImage} className="w-full h-full object-cover grayscale" alt="Home Hero Preview" />
                         </div>
                       )}
                       <input type="file" accept="image/*" ref={homeImageInputRef} onChange={(e) => handleFileChange(e, 'home')} className="text-[10px] text-[#555] file:mr-4 file:py-2 file:px-4 file:border-0 file:text-[10px] file:font-bold file:tracking-widest file:bg-zinc-800 file:text-white cursor-pointer" />
-                      <AdminInput label="OR IMAGE URL" value={homeDraft.heroImage} onChange={v => setHomeDraft(p => ({...p, heroImage: v}))} />
+                      <AdminInput label="OR IMAGE URL" defaultValue={home.heroImage} onChange={v => setHomeDraft(p => ({...p, heroImage: v}))} />
                     </div>
                 </div>
 
-                <AdminInput label="HERO TITLE" value={homeDraft.title} onChange={v => setHomeDraft(p => ({...p, title: v}))} />
-                <AdminInput label="HERO SUBTITLE" value={homeDraft.subtitle} onChange={v => setHomeDraft(p => ({...p, subtitle: v}))} />
-                <AdminInput label="LOCATION TEXT" value={homeDraft.location} onChange={v => setHomeDraft(p => ({...p, location: v}))} />
+                <AdminInput label="HERO TITLE" defaultValue={home.title} onChange={v => setHomeDraft(p => ({...p, title: v}))} />
+                <AdminInput label="HERO SUBTITLE" defaultValue={home.subtitle} onChange={v => setHomeDraft(p => ({...p, subtitle: v}))} />
+                <AdminInput label="LOCATION TEXT" defaultValue={home.location} onChange={v => setHomeDraft(p => ({...p, location: v}))} />
                 <div className="space-y-1">
                   <label className="text-[9px] text-[#555] uppercase tracking-widest font-bold">HERO CATEGORIES (Comma separated)</label>
                   <input 
                     className="w-full bg-zinc-900 border border-white/10 p-3 text-xs outline-none focus:border-white/30 text-white"
-                    value={homeDraft.categories?.join(', ')} 
+                    defaultValue={home.categories.join(', ')} 
                     onChange={e => setHomeDraft(p => ({...p, categories: e.target.value.split(',').map(s => s.trim())}))} 
                   />
                 </div>
@@ -398,9 +389,7 @@ const Admin: React.FC = () => {
                         className="aspect-[4/5] bg-zinc-900 border border-white/5 overflow-hidden mx-auto transition-all duration-300"
                         style={{ width: `${aboutDraft.profileImageSize || 100}%` }}
                       >
-                        { (localProfileImage || aboutDraft.profileImage) && (
-                          <img src={localProfileImage || aboutDraft.profileImage} className="w-full h-full object-cover" alt="Profile Preview" />
-                        )}
+                        <img src={localProfileImage || aboutDraft.profileImage} className="w-full h-full object-cover" alt="Profile Preview" />
                       </div>
                       
                       <div className="space-y-2">
@@ -426,7 +415,7 @@ const Admin: React.FC = () => {
                           onChange={(e) => handleFileChange(e, 'profile')} 
                           className="text-[10px] text-[#555] file:mr-4 file:py-2 file:px-4 file:border-0 file:text-[10px] file:font-bold file:tracking-widest file:bg-zinc-800 file:text-white cursor-pointer" 
                         />
-                        <AdminInput label="OR PROFILE IMAGE URL" value={aboutDraft.profileImage} onChange={v => setAboutDraft(p => ({...p, profileImage: v}))} />
+                        <AdminInput label="OR PROFILE IMAGE URL" defaultValue={aboutDraft.profileImage} onChange={v => setAboutDraft(p => ({...p, profileImage: v}))} />
                       </div>
                     </div>
                 </div>
@@ -435,7 +424,7 @@ const Admin: React.FC = () => {
                   <label className="text-[9px] text-[#555] uppercase tracking-widest font-bold">BIO PARAGRAPH 1 (LARGE TEXT)</label>
                   <textarea 
                     className="w-full bg-zinc-900 border border-white/10 p-4 text-xs outline-none focus:border-white/30 text-white min-h-[100px]"
-                    value={aboutDraft.description1} 
+                    defaultValue={aboutDraft.description1} 
                     onChange={e => setAboutDraft(p => ({...p, description1: e.target.value}))}
                   />
                 </div>
@@ -443,11 +432,11 @@ const Admin: React.FC = () => {
                   <label className="text-[9px] text-[#555] uppercase tracking-widest font-bold">BIO PARAGRAPH 2 (SMALL TEXT)</label>
                   <textarea 
                     className="w-full bg-zinc-900 border border-white/10 p-4 text-xs outline-none focus:border-white/30 text-white min-h-[150px]"
-                    value={aboutDraft.description2} 
+                    defaultValue={aboutDraft.description2} 
                     onChange={e => setAboutDraft(p => ({...p, description2: e.target.value}))}
                   />
                 </div>
-                <AdminInput label="GEAR LIST" value={aboutDraft.gearList} onChange={v => setAboutDraft(p => ({...p, gearList: v}))} />
+                <AdminInput label="GEAR LIST" defaultValue={aboutDraft.gearList} onChange={v => setAboutDraft(p => ({...p, gearList: v}))} />
                 <button type="submit" className="w-full bg-white text-black py-4 text-[10px] font-bold tracking-[0.2em] uppercase">SAVE ABOUT SETTINGS</button>
               </form>
             </section>
@@ -482,10 +471,10 @@ const Admin: React.FC = () => {
             <section className="bg-zinc-950 p-8 border border-white/5 max-w-2xl mx-auto">
               <h2 className="text-[11px] tracking-[0.3em] text-white mb-8 uppercase font-bold border-b border-white/10 pb-4">CONTACT INFO</h2>
               <form onSubmit={handleSaveContact} className="space-y-6">
-                <AdminInput label="EMAIL" value={contactDraft.email} onChange={v => setContactDraft(p => ({...p, email: v}))} />
-                <AdminInput label="INSTAGRAM" value={contactDraft.instagram} onChange={v => setContactDraft(p => ({...p, instagram: v}))} />
-                <AdminInput label="VIMEO URL" value={contactDraft.vimeo} onChange={v => setContactDraft(p => ({...p, vimeo: v}))} />
-                <AdminInput label="PHONE" value={contactDraft.phone} onChange={v => setContactDraft(p => ({...p, phone: v}))} />
+                <AdminInput label="EMAIL" defaultValue={contact.email} onChange={v => setContactDraft(p => ({...p, email: v}))} />
+                <AdminInput label="INSTAGRAM" defaultValue={contact.instagram} onChange={v => setContactDraft(p => ({...p, instagram: v}))} />
+                <AdminInput label="VIMEO URL" defaultValue={contact.vimeo} onChange={v => setContactDraft(p => ({...p, vimeo: v}))} />
+                <AdminInput label="PHONE" defaultValue={contact.phone} onChange={v => setContactDraft(p => ({...p, phone: v}))} />
                 <button type="submit" className="w-full bg-white text-black py-4 text-[10px] font-bold tracking-[0.2em] uppercase">SAVE CONTACT INFO</button>
               </form>
             </section>
@@ -496,13 +485,13 @@ const Admin: React.FC = () => {
   );
 };
 
-const AdminInput: React.FC<{ label: string; value?: string; defaultValue?: string; required?: boolean; onChange?: (v: string) => void; name?: string }> = ({ label, value, defaultValue, required, onChange, name }) => (
+const AdminInput: React.FC<{ label: string; defaultValue?: string; required?: boolean; onChange?: (v: string) => void; name?: string }> = ({ label, defaultValue, required, onChange, name }) => (
   <div className="space-y-1">
     <label className="text-[9px] text-[#555] uppercase tracking-widest font-bold">{label}</label>
     <input 
       name={name}
+      key={defaultValue}
       defaultValue={defaultValue} 
-      value={value}
       required={required}
       autoComplete="off"
       onChange={(e) => onChange && onChange(e.target.value)}

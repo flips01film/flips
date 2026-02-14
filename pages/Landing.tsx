@@ -1,13 +1,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useProjectStore, useContactStore, useHomeStore, useClientStore, useCategoryStore } from '../store';
+import { useProjectStore, useContactStore, useHomeStore, useClientStore, useCategoryStore, useAboutStore } from '../store';
 import ProjectCard from '../components/ProjectCard';
 
 const Landing: React.FC = () => {
   const { projects } = useProjectStore();
   const { contact } = useContactStore();
   const { home } = useHomeStore();
+  const { about } = useAboutStore();
   const { clientData } = useClientStore();
   const { categories } = useCategoryStore();
   const { hash } = useLocation();
@@ -92,6 +93,41 @@ const Landing: React.FC = () => {
               <p className="text-[#555555] text-xs tracking-widest uppercase">No projects found in this category.</p>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* ABOUT SECTION (Landing 통합) */}
+      <section id="about" className="py-32 px-6 md:px-12 bg-black border-t border-white/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <div 
+              className="aspect-[4/5] overflow-hidden bg-zinc-900 mx-auto lg:mx-0 transition-all duration-500"
+              style={{ width: `${about.profileImageSize || 100}%` }}
+            >
+              <img 
+                src={about.profileImage} 
+                alt="Profile" 
+                className="w-full h-full object-cover opacity-90 transition-opacity hover:opacity-100" 
+              />
+            </div>
+            <div className="space-y-8">
+              <h2 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase">FLIPS</h2>
+              <div className="space-y-6">
+                <p className="text-xl md:text-2xl font-light leading-relaxed tracking-tight text-white">
+                  {about.description1}
+                </p>
+                <p className="text-[#AAAAAA] text-sm md:text-base leading-relaxed tracking-wide">
+                  {about.description2}
+                </p>
+                <div className="pt-6 space-y-4">
+                  <h3 className="text-[10px] tracking-[0.3em] text-white uppercase font-bold">GEAR LIST</h3>
+                  <p className="text-[11px] text-[#555555] tracking-widest leading-loose uppercase">
+                    {about.gearList}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

@@ -30,7 +30,7 @@ const Navbar: React.FC = () => {
   const navLinks = [
     { name: 'HOME', id: 'home' },
     { name: 'WORKS', id: 'work' },
-    { name: 'ABOUT', path: '/about' },
+    { name: 'ABOUT', id: 'about' },
     { name: 'CONTACT', id: 'contact' },
   ];
 
@@ -42,26 +42,14 @@ const Navbar: React.FC = () => {
       
       <div className="flex gap-4 md:gap-10 items-center">
         {navLinks.map((link) => (
-          link.path ? (
-            <Link
-              key={link.name}
-              to={link.path}
-              className={`text-[10px] md:text-xs font-medium tracking-[0.2em] hover:text-white transition-colors uppercase ${
-                location.pathname === link.path ? 'text-white' : 'text-[#AAAAAA]'
-              }`}
-            >
-              {link.name}
-            </Link>
-          ) : (
-            <a
-              key={link.id}
-              href={`/#${link.id}`}
-              onClick={(e) => handleNavClick(e, link.id!)}
-              className={`text-[10px] md:text-xs font-medium tracking-[0.2em] hover:text-white transition-colors text-[#AAAAAA] uppercase`}
-            >
-              {link.name}
-            </a>
-          )
+          <a
+            key={link.id}
+            href={`/#${link.id}`}
+            onClick={(e) => handleNavClick(e, link.id!)}
+            className={`text-[10px] md:text-xs font-medium tracking-[0.2em] hover:text-white transition-colors text-[#AAAAAA] uppercase`}
+          >
+            {link.name}
+          </a>
         ))}
         <Link
           to="/admin"

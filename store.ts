@@ -6,8 +6,36 @@ import {
   INITIAL_CONTACT_INFO, 
   INITIAL_HOME_INFO, 
   INITIAL_ABOUT_INFO, 
-  INITIAL_CLIENT_DATA 
+  INITIAL_CLIENT_DATA,
+  INITIAL_CATEGORIES
 } from './constants';
+
+export const useCategoryStore = () => {
+  const [categories, setCategories] = useState<string[]>(() => {
+    const saved = localStorage.getItem('flips_categories');
+    return saved ? JSON.parse(saved) : INITIAL_CATEGORIES;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('flips_categories', JSON.stringify(categories));
+  }, [categories]);
+
+  const addCategory = (name: string) => {
+    if (!categories.includes(name)) {
+      setCategories(prev => [...prev, name]);
+    }
+  };
+
+  const deleteCategory = (name: string) => {
+    setCategories(prev => prev.filter(c => c !== name));
+  };
+
+  const updateCategories = (newList: string[]) => {
+    setCategories(newList);
+  };
+
+  return { categories, addCategory, deleteCategory, updateCategories };
+};
 
 export const useProjectStore = () => {
   const [projects, setProjects] = useState<Project[]>(() => {

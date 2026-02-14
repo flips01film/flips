@@ -6,11 +6,12 @@ import {
   useContactStore, 
   useHomeStore, 
   useAboutStore, 
-  useClientStore 
+  useClientStore,
+  useCategoryStore
 } from '../store';
-import { Category, Project, ContactInfo, HomeInfo, AboutInfo, ClientList } from '../types';
+import { Project, ContactInfo, HomeInfo, AboutInfo, ClientList, Category } from '../types';
 
-type AdminTab = 'PROJECTS' | 'HOME' | 'ABOUT' | 'CLIENTS' | 'CONTACT';
+type AdminTab = 'PROJECTS' | 'CATEGORIES' | 'HOME' | 'ABOUT' | 'CLIENTS' | 'CONTACT';
 
 const Admin: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -22,10 +23,12 @@ const Admin: React.FC = () => {
   const { home, updateHome } = useHomeStore();
   const { about, updateAbout } = useAboutStore();
   const { clientData, updateClients } = useClientStore();
+  const { categories, addCategory, deleteCategory } = useCategoryStore();
 
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [localThumbnail, setLocalThumbnail] = useState<string | null>(null);
   const [localHomeImage, setLocalHomeImage] = useState<string | null>(null);
+  const [newCategoryName, setNewCategoryName] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const homeImageInputRef = useRef<HTMLInputElement>(null);
 
@@ -106,6 +109,15 @@ const Admin: React.FC = () => {
     reorderProjects(newProjects);
   };
 
+  const handleAddCategory = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newCategoryName.trim()) {
+      addCategory(newCategoryName.trim());
+      setNewCategoryName('');
+      alert('카테고리가 추가되었습니다.');
+    }
+  };
+
   const handleSaveHome = (e: React.FormEvent) => {
     e.preventDefault();
     updateHome(homeDraft);
@@ -155,7 +167,7 @@ const Admin: React.FC = () => {
     );
   }
 
-  const tabs: AdminTab[] = ['PROJECTS', 'HOME', 'ABOUT', 'CLIENTS', 'CONTACT'];
+  const tabs: AdminTab[] = ['PROJECTS', 'CATEGORIES', 'HOME', 'ABOUT', 'CLIENTS', 'CONTACT'];
 
   return (
     <div className="pt-32 pb-32 px-6 md:px-12 bg-[#000] min-h-screen text-white">
@@ -201,7 +213,7 @@ const Admin: React.FC = () => {
                   <div className="space-y-1">
                     <label className="text-[9px] text-[#555] uppercase tracking-widest font-bold">CATEGORY</label>
                     <select name="category" defaultValue={editingProject?.category} className="w-full bg-zinc-900 border border-white/5 p-3 text-xs outline-none focus:border-white/20 text-white">
-                      {Object.values(Category).filter(c => c !== Category.ALL).map(cat => (
+                      {categories.map(cat => (
                         <option key={cat} value={cat}>{cat}</option>
                       ))}
                     </select>
@@ -281,6 +293,41 @@ const Admin: React.FC = () => {
                         <button onClick={() => { setEditingProject(p); setActiveTab('PROJECTS'); window.scrollTo(0,0); }} className="text-[10px] tracking-widest text-[#555] hover:text-white uppercase font-bold transition-colors">Edit</button>
                         <button onClick={() => { if(confirm('정말 삭제하시겠습니까?')) deleteProject(p.id); }} className="text-[10px] tracking-widest text-zinc-800 hover:text-red-500 uppercase font-bold transition-colors">Del</button>
                       </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'CATEGORIES' && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+              <div className="bg-zinc-950 p-8 border border-white/5 rounded-sm h-fit">
+                <h2 className="text-[11px] tracking-[0.3em] text-white mb-8 uppercase font-bold border-b border-white/10 pb-4">ADD CATEGORY</h2>
+                <form onSubmit={handleAddCategory} className="space-y-5">
+                  <AdminInput 
+                    label="CATEGORY NAME" 
+                    defaultValue={newCategoryName} 
+                    onChange={v => setNewCategoryName(v)}
+                    required 
+                  />
+                  <button type="submit" className="w-full bg-white text-black py-4 text-[10px] font-bold tracking-[0.2em] uppercase">
+                    ADD CATEGORY
+                  </button>
+                </form>
+              </div>
+              <div>
+                <h2 className="text-[11px] tracking-[0.3em] text-[#AAAAAA] mb-8 uppercase font-bold">EXISTING CATEGORIES</h2>
+                <div className="space-y-3">
+                  {categories.map(cat => (
+                    <div key={cat} className="bg-zinc-950 p-5 flex justify-between items-center border border-white/5">
+                      <span className="text-sm tracking-widest uppercase">{cat}</span>
+                      <button 
+                        onClick={() => { if(confirm('정말 삭제하시겠습니까?')) deleteCategory(cat); }}
+                        className="text-[10px] tracking-widest text-zinc-800 hover:text-red-500 uppercase font-bold transition-colors"
+                      >
+                        Delete
+                      </button>
                     </div>
                   ))}
                 </div>

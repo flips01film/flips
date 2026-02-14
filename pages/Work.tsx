@@ -1,16 +1,16 @@
 
 import React, { useState } from 'react';
-import { useProjectStore } from '../store';
+import { useProjectStore, useCategoryStore } from '../store';
 import ProjectCard from '../components/ProjectCard';
-import { Category } from '../types';
 
 const Work: React.FC = () => {
   const { projects } = useProjectStore();
-  const [activeCategory, setActiveCategory] = useState<Category>(Category.ALL);
+  const { categories } = useCategoryStore();
+  const [activeCategory, setActiveCategory] = useState<string>('ALL');
 
-  const categories = Object.values(Category);
+  const allCategories = ['ALL', ...categories];
 
-  const filteredProjects = activeCategory === Category.ALL
+  const filteredProjects = activeCategory === 'ALL'
     ? projects
     : projects.filter(p => p.category === activeCategory);
 
@@ -21,7 +21,7 @@ const Work: React.FC = () => {
           <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-12">WORKS</h1>
           
           <div className="flex flex-wrap gap-x-8 gap-y-4">
-            {categories.map((cat) => (
+            {allCategories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}

@@ -1,11 +1,5 @@
 
-export enum Category {
-  ALL = 'ALL',
-  CONCERT = 'CONCERT BTS',
-  MUSIC_VIDEO = 'MUSIC VIDEO BTS',
-  BROADCAST = 'BROADCAST',
-  COMMERCIAL = 'COMMERCIAL'
-}
+export type Category = string;
 
 export interface Project {
   id: string;

@@ -1,5 +1,12 @@
 
-import { Category, Project, ContactInfo, HomeInfo, AboutInfo, ClientList } from './types';
+import { Project, ContactInfo, HomeInfo, AboutInfo, ClientList } from './types';
+
+export const INITIAL_CATEGORIES: string[] = [
+  'CONCERT BTS',
+  'MUSIC VIDEO BTS',
+  'BROADCAST',
+  'COMMERCIAL'
+];
 
 export const INITIAL_PROJECTS: Project[] = [
   {
@@ -8,7 +15,7 @@ export const INITIAL_PROJECTS: Project[] = [
     title: 'World Tour [H.E.R.E] Behind Film',
     client: 'EDAM Entertainment',
     production: 'FLIPS',
-    category: Category.CONCERT,
+    category: 'CONCERT BTS',
     role: 'Cinematographer',
     company: 'FLIPS',
     camera: 'Sony FX6',
@@ -23,7 +30,7 @@ export const INITIAL_PROJECTS: Project[] = [
     title: 'Music Bank Live Performance',
     client: 'HYBE / ADOR',
     production: 'KBS',
-    category: Category.BROADCAST,
+    category: 'BROADCAST',
     role: 'Cinematographer',
     company: 'FLIPS',
     camera: 'Sony Venice 2',
@@ -38,7 +45,7 @@ export const INITIAL_PROJECTS: Project[] = [
     title: 'Galaxy S24 Ultra Brand Film',
     client: 'Samsung Electronics',
     production: 'Production A',
-    category: Category.COMMERCIAL,
+    category: 'COMMERCIAL',
     role: 'Cinematographer',
     company: 'FLIPS',
     camera: 'Arri Alexa Mini LF',

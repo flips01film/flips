@@ -1,17 +1,17 @@
 
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useProjectStore, useContactStore, useHomeStore, useClientStore } from '../store';
+import { useProjectStore, useContactStore, useHomeStore, useClientStore, useCategoryStore } from '../store';
 import ProjectCard from '../components/ProjectCard';
-import { Category } from '../types';
 
 const Landing: React.FC = () => {
   const { projects } = useProjectStore();
   const { contact } = useContactStore();
   const { home } = useHomeStore();
   const { clientData } = useClientStore();
+  const { categories } = useCategoryStore();
   const { hash } = useLocation();
-  const [activeCategory, setActiveCategory] = useState<Category>(Category.ALL);
+  const [activeCategory, setActiveCategory] = useState<string>('ALL');
 
   useEffect(() => {
     if (hash) {
@@ -22,8 +22,8 @@ const Landing: React.FC = () => {
     }
   }, [hash]);
 
-  const categories = Object.values(Category);
-  const filteredProjects = activeCategory === Category.ALL
+  const allCategories = ['ALL', ...categories];
+  const filteredProjects = activeCategory === 'ALL'
     ? projects
     : projects.filter(p => p.category === activeCategory);
 
@@ -67,7 +67,7 @@ const Landing: React.FC = () => {
           <header className="mb-20">
             <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-12">WORKS</h2>
             <div className="flex flex-wrap gap-x-8 gap-y-4">
-              {categories.map((cat) => (
+              {allCategories.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}

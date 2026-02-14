@@ -124,3 +124,30 @@ export const useContactStore = () => {
 
   return { contact, updateContact };
 };
+
+export const syncAppData = (jsonString: string) => {
+  try {
+    const data = JSON.parse(jsonString);
+    if (data.projects) localStorage.setItem('flips_projects', JSON.stringify(data.projects));
+    if (data.categories) localStorage.setItem('flips_categories', JSON.stringify(data.categories));
+    if (data.home) localStorage.setItem('flips_home', JSON.stringify(data.home));
+    if (data.about) localStorage.setItem('flips_about', JSON.stringify(data.about));
+    if (data.clients) localStorage.setItem('flips_clients', JSON.stringify(data.clients));
+    if (data.contact) localStorage.setItem('flips_contact', JSON.stringify(data.contact));
+    window.location.reload();
+  } catch (e) {
+    alert('Invalid Sync Code. Please check the data format.');
+  }
+};
+
+export const exportAppData = () => {
+  const data = {
+    projects: JSON.parse(localStorage.getItem('flips_projects') || '[]'),
+    categories: JSON.parse(localStorage.getItem('flips_categories') || '[]'),
+    home: JSON.parse(localStorage.getItem('flips_home') || '{}'),
+    about: JSON.parse(localStorage.getItem('flips_about') || '{}'),
+    clients: JSON.parse(localStorage.getItem('flips_clients') || '{}'),
+    contact: JSON.parse(localStorage.getItem('flips_contact') || '{}'),
+  };
+  return JSON.stringify(data);
+};

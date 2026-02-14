@@ -8,18 +8,18 @@ const Work: React.FC = () => {
   const { categories } = useCategoryStore();
   const [activeCategory, setActiveCategory] = useState<string>('ALL');
 
-  // Hardcoded as per specification but keeping store-linked categories as well
-  const filterOptions = ['ALL', 'CONCERT', 'MUSIC VIDEO', 'BROADCAST', 'COMMERCIAL', 'BEHIND THE SCENES'];
+  // Dynamic filter options based on Admin-defined categories
+  const filterOptions = ['ALL', ...categories];
 
   const filteredProjects = activeCategory === 'ALL'
     ? projects
-    : projects.filter(p => p.category.toUpperCase() === activeCategory);
+    : projects.filter(p => p.category.toUpperCase() === activeCategory.toUpperCase());
 
   return (
     <div className="pt-40 pb-40 px-6 md:px-12 bg-black min-h-screen">
       <div className="max-w-7xl mx-auto">
         <header className="mb-24">
-          <h1 className="text-6xl md:text-8xl font-bold tracking-tighter mb-16">WORK</h1>
+          <h1 className="text-6xl md:text-8xl font-bold tracking-tighter mb-16 uppercase">WORK</h1>
           
           <div className="flex flex-wrap gap-x-10 gap-y-6">
             {filterOptions.map((cat) => (

@@ -28,9 +28,12 @@ const Admin: React.FC = () => {
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [localThumbnail, setLocalThumbnail] = useState<string | null>(null);
   const [localHomeImage, setLocalHomeImage] = useState<string | null>(null);
+  const [localProfileImage, setLocalProfileImage] = useState<string | null>(null);
   const [newCategoryName, setNewCategoryName] = useState('');
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
   const homeImageInputRef = useRef<HTMLInputElement>(null);
+  const profileImageInputRef = useRef<HTMLInputElement>(null);
 
   // Drafts for direct form control
   const [contactDraft, setContactDraft] = useState<ContactInfo>(contact);
@@ -48,15 +51,20 @@ const Admin: React.FC = () => {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'project' | 'home') => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'project' | 'home' | 'profile') => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        if (type === 'project') setLocalThumbnail(reader.result as string);
-        else {
-          setLocalHomeImage(reader.result as string);
-          setHomeDraft(p => ({ ...p, heroImage: reader.result as string }));
+        const base64 = reader.result as string;
+        if (type === 'project') {
+          setLocalThumbnail(base64);
+        } else if (type === 'home') {
+          setLocalHomeImage(base64);
+          setHomeDraft(p => ({ ...p, heroImage: base64 }));
+        } else if (type === 'profile') {
+          setLocalProfileImage(base64);
+          setAboutDraft(p => ({ ...p, profileImage: base64 }));
         }
       };
       reader.readAsDataURL(file);
@@ -374,7 +382,25 @@ const Admin: React.FC = () => {
             <section className="bg-zinc-950 p-8 border border-white/5 max-w-3xl mx-auto">
               <h2 className="text-[11px] tracking-[0.3em] text-white mb-8 uppercase font-bold border-b border-white/10 pb-4">ABOUT SETTINGS</h2>
               <form onSubmit={handleSaveAbout} className="space-y-6">
-                <AdminInput label="PROFILE IMAGE URL" defaultValue={about.profileImage} onChange={v => setAboutDraft(p => ({...p, profileImage: v}))} />
+                <div className="space-y-2">
+                    <label className="text-[9px] text-[#555] uppercase tracking-widest font-bold">PROFILE IMAGE</label>
+                    <div className="flex flex-col gap-3">
+                      {(localProfileImage || about.profileImage) && (
+                        <div className="w-48 aspect-[4/5] bg-zinc-900 border border-white/5 overflow-hidden mx-auto">
+                          <img src={localProfileImage || about.profileImage} className="w-full h-full object-cover grayscale" alt="Profile Preview" />
+                        </div>
+                      )}
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        ref={profileImageInputRef} 
+                        onChange={(e) => handleFileChange(e, 'profile')} 
+                        className="text-[10px] text-[#555] file:mr-4 file:py-2 file:px-4 file:border-0 file:text-[10px] file:font-bold file:tracking-widest file:bg-zinc-800 file:text-white cursor-pointer" 
+                      />
+                      <AdminInput label="OR PROFILE IMAGE URL" defaultValue={about.profileImage} onChange={v => setAboutDraft(p => ({...p, profileImage: v}))} />
+                    </div>
+                </div>
+                
                 <div className="space-y-1">
                   <label className="text-[9px] text-[#555] uppercase tracking-widest font-bold">BIO PARAGRAPH 1 (LARGE TEXT)</label>
                   <textarea 

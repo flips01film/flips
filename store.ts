@@ -1,7 +1,13 @@
 
 import { useState, useEffect } from 'react';
-import { Project, ContactInfo } from './types';
-import { INITIAL_PROJECTS, INITIAL_CONTACT_INFO } from './constants';
+import { Project, ContactInfo, HomeInfo, AboutInfo, ClientList } from './types';
+import { 
+  INITIAL_PROJECTS, 
+  INITIAL_CONTACT_INFO, 
+  INITIAL_HOME_INFO, 
+  INITIAL_ABOUT_INFO, 
+  INITIAL_CLIENT_DATA 
+} from './constants';
 
 export const useProjectStore = () => {
   const [projects, setProjects] = useState<Project[]>(() => {
@@ -26,6 +32,48 @@ export const useProjectStore = () => {
   };
 
   return { projects, addProject, updateProject, deleteProject };
+};
+
+export const useHomeStore = () => {
+  const [home, setHome] = useState<HomeInfo>(() => {
+    const saved = localStorage.getItem('flips_home');
+    return saved ? JSON.parse(saved) : INITIAL_HOME_INFO;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('flips_home', JSON.stringify(home));
+  }, [home]);
+
+  const updateHome = (newHome: HomeInfo) => setHome(newHome);
+  return { home, updateHome };
+};
+
+export const useAboutStore = () => {
+  const [about, setAbout] = useState<AboutInfo>(() => {
+    const saved = localStorage.getItem('flips_about');
+    return saved ? JSON.parse(saved) : INITIAL_ABOUT_INFO;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('flips_about', JSON.stringify(about));
+  }, [about]);
+
+  const updateAbout = (newAbout: AboutInfo) => setAbout(newAbout);
+  return { about, updateAbout };
+};
+
+export const useClientStore = () => {
+  const [clientData, setClientData] = useState<ClientList>(() => {
+    const saved = localStorage.getItem('flips_clients');
+    return saved ? JSON.parse(saved) : INITIAL_CLIENT_DATA;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('flips_clients', JSON.stringify(clientData));
+  }, [clientData]);
+
+  const updateClients = (newClients: ClientList) => setClientData(newClients);
+  return { clientData, updateClients };
 };
 
 export const useContactStore = () => {

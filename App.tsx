@@ -4,13 +4,13 @@ import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-d
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Landing from './pages/Landing';
+import About from './pages/About';
 import ProjectDetail from './pages/ProjectDetail';
 import Admin from './pages/Admin';
 
 const ScrollToTop = () => {
   const { pathname, hash } = useLocation();
   React.useEffect(() => {
-    // Only scroll to top if there's no hash (i.e., not a section link)
     if (!hash) {
       window.scrollTo(0, 0);
     }
@@ -40,6 +40,7 @@ const App: React.FC = () => {
       <Layout>
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/about" element={<About />} />
           <Route path="/work/:id" element={<ProjectDetail />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>

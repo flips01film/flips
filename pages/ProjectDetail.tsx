@@ -50,7 +50,6 @@ const ProjectDetail: React.FC = () => {
              <InfoBlock label="COMPANY" value={project.company} />
              <InfoBlock label="YEAR" value={project.year} />
              <InfoBlock label="CAMERA" value={project.camera} />
-             <InfoBlock label="LENS" value={project.lens} />
           </div>
         </div>
 

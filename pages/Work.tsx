@@ -18,7 +18,7 @@ const Work: React.FC = () => {
     <div className="pt-32 pb-32 px-6 md:px-12 bg-black min-h-screen">
       <div className="max-w-7xl mx-auto">
         <header className="mb-20">
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-12">WORK</h1>
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-12">WORKS</h1>
           
           <div className="flex flex-wrap gap-x-8 gap-y-4">
             {categories.map((cat) => (

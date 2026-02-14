@@ -32,7 +32,7 @@ const Footer: React.FC = () => {
           <h3 className="text-[10px] tracking-[0.2em] text-[#AAAAAA] mb-6 font-bold">EXPLORE</h3>
           <ul className="space-y-3">
             <li><a href="/#home" onClick={(e) => handleNavClick(e, 'home')} className="text-xs tracking-widest hover:text-white text-[#555] transition-colors uppercase">HOME</a></li>
-            <li><a href="/#work" onClick={(e) => handleNavClick(e, 'work')} className="text-xs tracking-widest hover:text-white text-[#555] transition-colors uppercase">WORK</a></li>
+            <li><a href="/#work" onClick={(e) => handleNavClick(e, 'work')} className="text-xs tracking-widest hover:text-white text-[#555] transition-colors uppercase">WORKS</a></li>
             <li><a href="/#contact" onClick={(e) => handleNavClick(e, 'contact')} className="text-xs tracking-widest hover:text-white text-[#555] transition-colors uppercase">CONTACT</a></li>
           </ul>
         </div>

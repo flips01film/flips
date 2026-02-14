@@ -1,14 +1,15 @@
 
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useProjectStore, useContactStore } from '../store';
+import { useProjectStore, useContactStore, useHomeStore, useClientStore } from '../store';
 import ProjectCard from '../components/ProjectCard';
 import { Category } from '../types';
-import { CLIENT_DATA } from '../constants';
 
 const Landing: React.FC = () => {
   const { projects } = useProjectStore();
   const { contact } = useContactStore();
+  const { home } = useHomeStore();
+  const { clientData } = useClientStore();
   const { hash } = useLocation();
   const [activeCategory, setActiveCategory] = useState<Category>(Category.ALL);
 
@@ -32,33 +33,39 @@ const Landing: React.FC = () => {
       <section id="home" className="relative h-screen w-full flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-black/60 z-10" />
-          <video autoPlay muted loop playsInline className="w-full h-full object-cover">
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-recording-a-concert-with-a-camera-34563-large.mp4" type="video/mp4" />
-          </video>
+          {home.heroVideo ? (
+            <video autoPlay muted loop playsInline className="w-full h-full object-cover" key={home.heroVideo} poster={home.heroImage}>
+              <source src={home.heroVideo} type="video/mp4" />
+            </video>
+          ) : (
+            <div 
+              className="w-full h-full bg-cover bg-center" 
+              style={{ backgroundImage: `url(${home.heroImage})` }}
+            />
+          )}
         </div>
         <div className="relative z-20 text-center space-y-8 px-6">
           <div className="space-y-2">
-            <h1 className="brand-font text-5xl md:text-8xl font-bold tracking-tighter">FLIPS</h1>
-            <p className="text-xs md:text-sm tracking-[0.5em] text-[#AAAAAA] uppercase">Cinematography</p>
+            <h1 className="brand-font text-5xl md:text-8xl font-bold tracking-tighter uppercase">{home.title}</h1>
+            <p className="text-xs md:text-sm tracking-[0.5em] text-[#AAAAAA] uppercase">{home.subtitle}</p>
           </div>
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-[10px] md:text-xs tracking-[0.2em] text-[#AAAAAA]">
-            <span>CONCERT</span>
-            <span>MUSIC VIDEO</span>
-            <span>BROADCAST</span>
-            <span>COMMERCIAL</span>
+            {home.categories.map((cat, idx) => (
+              <span key={idx}>{cat}</span>
+            ))}
           </div>
-          <p className="text-[10px] tracking-[0.3em] text-white/50 pt-10 uppercase">Based in Seoul</p>
+          <p className="text-[10px] tracking-[0.3em] text-white/50 pt-10 uppercase">{home.location}</p>
           <div className="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce">
             <span className="text-lg">↓</span>
           </div>
         </div>
       </section>
 
-      {/* WORK SECTION */}
+      {/* WORKS SECTION */}
       <section id="work" className="py-32 px-6 md:px-12 bg-black border-t border-white/5">
         <div className="max-w-7xl mx-auto">
           <header className="mb-20">
-            <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-12">WORK</h2>
+            <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-12">WORKS</h2>
             <div className="flex flex-wrap gap-x-8 gap-y-4">
               {categories.map((cat) => (
                 <button
@@ -88,14 +95,14 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* WORKED WITH (Moved from About) */}
+      {/* WORKED WITH */}
       <section className="py-32 px-6 md:px-12 bg-black border-t border-white/5">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
             <div>
               <h3 className="text-[10px] tracking-[0.3em] text-[#AAAAAA] mb-12 uppercase font-bold">ARTISTS</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {CLIENT_DATA.artists.map(artist => (
+                {clientData.artists.map(artist => (
                   <p key={artist} className="text-sm tracking-tight text-[#666]">{artist}</p>
                 ))}
               </div>
@@ -103,10 +110,10 @@ const Landing: React.FC = () => {
             <div>
               <h3 className="text-[10px] tracking-[0.3em] text-[#AAAAAA] mb-12 uppercase font-bold">CLIENTS</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {CLIENT_DATA.clients.map(client => (
-                  <div key={client} className="text-sm tracking-tight text-[#666]">
+                {clientData.clients.map(client => (
+                  <p key={client} className="text-sm tracking-tight text-[#666]">
                     {client}
-                  </div>
+                  </p>
                 ))}
               </div>
             </div>

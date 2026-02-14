@@ -1,11 +1,10 @@
 
 export enum Category {
   ALL = 'ALL',
-  CONCERT = 'CONCERT',
-  MUSIC_VIDEO = 'MUSIC VIDEO',
+  CONCERT = 'CONCERT BTS',
+  MUSIC_VIDEO = 'MUSIC VIDEO BTS',
   BROADCAST = 'BROADCAST',
-  COMMERCIAL = 'COMMERCIAL',
-  BEHIND_THE_SCENES = 'BEHIND THE SCENES'
+  COMMERCIAL = 'COMMERCIAL'
 }
 
 export interface Project {
@@ -18,7 +17,6 @@ export interface Project {
   role: string;
   company: string;
   camera: string;
-  lens: string;
   year: string;
   videoUrl: string; // Vimeo or YouTube URL
   thumbnail: string;
@@ -30,6 +28,22 @@ export interface ContactInfo {
   instagram: string;
   vimeo: string;
   phone: string;
+}
+
+export interface HomeInfo {
+  heroVideo: string;
+  heroImage: string;
+  title: string;
+  subtitle: string;
+  location: string;
+  categories: string[];
+}
+
+export interface AboutInfo {
+  profileImage: string;
+  description1: string;
+  description2: string;
+  gearList: string;
 }
 
 export interface ClientList {

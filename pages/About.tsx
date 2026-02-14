@@ -15,16 +15,19 @@ const About: React.FC = () => {
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start mb-40">
-          <div className="aspect-[4/5] overflow-hidden bg-zinc-900">
+          <div 
+            className="aspect-[4/5] overflow-hidden bg-zinc-900 mx-auto lg:mx-0 transition-all duration-500"
+            style={{ width: `${about.profileImageSize || 100}%` }}
+          >
             <img 
               src={about.profileImage} 
               alt="FLIPS Profile" 
-              className="w-full h-full object-cover grayscale opacity-80"
+              className="w-full h-full object-cover opacity-90 transition-opacity hover:opacity-100"
             />
           </div>
           
           <div className="space-y-10 py-10">
-            <p className="text-xl md:text-2xl font-light leading-relaxed tracking-tight">
+            <p className="text-xl md:text-2xl font-light leading-relaxed tracking-tight text-white">
               {about.description1}
             </p>
             <p className="text-[#AAAAAA] text-sm md:text-base leading-relaxed tracking-wide">

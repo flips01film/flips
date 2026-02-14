@@ -35,6 +35,7 @@ export interface HomeInfo {
 
 export interface AboutInfo {
   profileImage: string;
+  profileImageSize: number; // Width in percentage (e.g., 50 to 100)
   description1: string;
   description2: string;
   gearList: string;

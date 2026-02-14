@@ -381,23 +381,42 @@ const Admin: React.FC = () => {
           {activeTab === 'ABOUT' && (
             <section className="bg-zinc-950 p-8 border border-white/5 max-w-3xl mx-auto">
               <h2 className="text-[11px] tracking-[0.3em] text-white mb-8 uppercase font-bold border-b border-white/10 pb-4">ABOUT SETTINGS</h2>
-              <form onSubmit={handleSaveAbout} className="space-y-6">
-                <div className="space-y-2">
+              <form onSubmit={handleSaveAbout} className="space-y-10">
+                <div className="space-y-4">
                     <label className="text-[9px] text-[#555] uppercase tracking-widest font-bold">PROFILE IMAGE</label>
-                    <div className="flex flex-col gap-3">
-                      {(localProfileImage || about.profileImage) && (
-                        <div className="w-48 aspect-[4/5] bg-zinc-900 border border-white/5 overflow-hidden mx-auto">
-                          <img src={localProfileImage || about.profileImage} className="w-full h-full object-cover grayscale" alt="Profile Preview" />
+                    <div className="flex flex-col gap-6">
+                      <div 
+                        className="aspect-[4/5] bg-zinc-900 border border-white/5 overflow-hidden mx-auto transition-all duration-300"
+                        style={{ width: `${aboutDraft.profileImageSize || 100}%` }}
+                      >
+                        <img src={localProfileImage || aboutDraft.profileImage} className="w-full h-full object-cover" alt="Profile Preview" />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <label className="text-[9px] text-[#555] uppercase tracking-widest font-bold">IMAGE SIZE ({aboutDraft.profileImageSize}%)</label>
                         </div>
-                      )}
-                      <input 
-                        type="file" 
-                        accept="image/*" 
-                        ref={profileImageInputRef} 
-                        onChange={(e) => handleFileChange(e, 'profile')} 
-                        className="text-[10px] text-[#555] file:mr-4 file:py-2 file:px-4 file:border-0 file:text-[10px] file:font-bold file:tracking-widest file:bg-zinc-800 file:text-white cursor-pointer" 
-                      />
-                      <AdminInput label="OR PROFILE IMAGE URL" defaultValue={about.profileImage} onChange={v => setAboutDraft(p => ({...p, profileImage: v}))} />
+                        <input 
+                          type="range" 
+                          min="30" 
+                          max="100" 
+                          step="1"
+                          value={aboutDraft.profileImageSize || 100}
+                          onChange={(e) => setAboutDraft(p => ({ ...p, profileImageSize: parseInt(e.target.value) }))}
+                          className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-white"
+                        />
+                      </div>
+
+                      <div className="space-y-3">
+                        <input 
+                          type="file" 
+                          accept="image/*" 
+                          ref={profileImageInputRef} 
+                          onChange={(e) => handleFileChange(e, 'profile')} 
+                          className="text-[10px] text-[#555] file:mr-4 file:py-2 file:px-4 file:border-0 file:text-[10px] file:font-bold file:tracking-widest file:bg-zinc-800 file:text-white cursor-pointer" 
+                        />
+                        <AdminInput label="OR PROFILE IMAGE URL" defaultValue={aboutDraft.profileImage} onChange={v => setAboutDraft(p => ({...p, profileImage: v}))} />
+                      </div>
                     </div>
                 </div>
                 
@@ -405,7 +424,7 @@ const Admin: React.FC = () => {
                   <label className="text-[9px] text-[#555] uppercase tracking-widest font-bold">BIO PARAGRAPH 1 (LARGE TEXT)</label>
                   <textarea 
                     className="w-full bg-zinc-900 border border-white/10 p-4 text-xs outline-none focus:border-white/30 text-white min-h-[100px]"
-                    defaultValue={about.description1} 
+                    defaultValue={aboutDraft.description1} 
                     onChange={e => setAboutDraft(p => ({...p, description1: e.target.value}))}
                   />
                 </div>
@@ -413,11 +432,11 @@ const Admin: React.FC = () => {
                   <label className="text-[9px] text-[#555] uppercase tracking-widest font-bold">BIO PARAGRAPH 2 (SMALL TEXT)</label>
                   <textarea 
                     className="w-full bg-zinc-900 border border-white/10 p-4 text-xs outline-none focus:border-white/30 text-white min-h-[150px]"
-                    defaultValue={about.description2} 
+                    defaultValue={aboutDraft.description2} 
                     onChange={e => setAboutDraft(p => ({...p, description2: e.target.value}))}
                   />
                 </div>
-                <AdminInput label="GEAR LIST" defaultValue={about.gearList} onChange={v => setAboutDraft(p => ({...p, gearList: v}))} />
+                <AdminInput label="GEAR LIST" defaultValue={aboutDraft.gearList} onChange={v => setAboutDraft(p => ({...p, gearList: v}))} />
                 <button type="submit" className="w-full bg-white text-black py-4 text-[10px] font-bold tracking-[0.2em] uppercase">SAVE ABOUT SETTINGS</button>
               </form>
             </section>

@@ -67,6 +67,7 @@ export const INITIAL_HOME_INFO: HomeInfo = {
 
 export const INITIAL_ABOUT_INFO: AboutInfo = {
   profileImage: 'https://picsum.photos/id/101/1200/1500',
+  profileImageSize: 100,
   description1: 'FLIPS is a Seoul-based cinematography company specializing in concert, music video, broadcast, and commercial filming.',
   description2: 'We focus on capturing authentic moments, atmosphere, and emotional energy in live and production environments. Our approach combines technical precision with a documentary-style emotional depth, ensuring that every project resonates with its intended audience.',
   gearList: 'SONY VENICE 2 / ARRI ALEXA MINI LF / SONY FX6 / SONY FX3 / ARRI SIGNATURE PRIMES / ZEISS SUPREME PRIMES / COOKE S4/i / DZOFILM VESPID PRIMES'

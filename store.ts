@@ -10,14 +10,25 @@ import {
   INITIAL_CATEGORIES
 } from './constants';
 
-// 커스텀 이벤트 시스템을 통해 여러 탭이나 컴포넌트 간 상태를 동기화합니다.
 const createStore = <T>(key: string, initialValue: T) => {
   const eventName = `store_update_${key}`;
 
   return () => {
     const [state, setState] = useState<T>(() => {
-      const saved = localStorage.getItem(key);
-      return saved ? JSON.parse(saved) : initialValue;
+      try {
+        const saved = localStorage.getItem(key);
+        if (!saved) return initialValue;
+        const parsed = JSON.parse(saved);
+        
+        // 배열인 경우 그대로 반환, 객체인 경우 초기값과 병합하여 새로운 필드 누락 방지
+        if (Array.isArray(initialValue)) {
+          return parsed;
+        }
+        return { ...initialValue, ...parsed };
+      } catch (e) {
+        console.error(`Failed to load ${key} from localStorage`, e);
+        return initialValue;
+      }
     });
 
     const updateState = useCallback((newValue: T | ((prev: T) => T)) => {
@@ -36,7 +47,12 @@ const createStore = <T>(key: string, initialValue: T) => {
       
       const handleStorage = (e: StorageEvent) => {
         if (e.key === key && e.newValue) {
-          setState(JSON.parse(e.newValue));
+          try {
+            const parsed = JSON.parse(e.newValue);
+            setState(Array.isArray(initialValue) ? parsed : { ...initialValue, ...parsed });
+          } catch (err) {
+            console.error(err);
+          }
         }
       };
 
@@ -70,7 +86,7 @@ export const useCategoryStore = () => {
     setCategories(newList);
   };
 
-  return { categories, addCategory, deleteCategory, updateCategories };
+  return { categories: categories || [], addCategory, deleteCategory, updateCategories };
 };
 
 const useProjectsInternal = createStore('flips_projects', INITIAL_PROJECTS);
@@ -78,22 +94,22 @@ export const useProjectStore = () => {
   const [projects, setProjects] = useProjectsInternal();
 
   const addProject = (project: Project) => {
-    setProjects([project, ...projects]);
+    setProjects([project, ...(projects || [])]);
   };
 
   const updateProject = (id: string, updated: Project) => {
-    setProjects(projects.map(p => p.id === id ? updated : p));
+    setProjects((projects || []).map(p => p.id === id ? updated : p));
   };
 
   const deleteProject = (id: string) => {
-    setProjects(projects.filter(p => p.id !== id));
+    setProjects((projects || []).filter(p => p.id !== id));
   };
 
   const reorderProjects = (newProjects: Project[]) => {
     setProjects(newProjects);
   };
 
-  return { projects, addProject, updateProject, deleteProject, reorderProjects };
+  return { projects: projects || [], addProject, updateProject, deleteProject, reorderProjects };
 };
 
 const useHomeInternal = createStore('flips_home', INITIAL_HOME_INFO);

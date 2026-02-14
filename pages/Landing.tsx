@@ -23,10 +23,10 @@ const Landing: React.FC = () => {
     }
   }, [hash]);
 
-  const allCategories = ['ALL', ...categories];
+  const allCategories = ['ALL', ...(categories || [])];
   const filteredProjects = activeCategory === 'ALL'
-    ? projects
-    : projects.filter(p => p.category === activeCategory);
+    ? (projects || [])
+    : (projects || []).filter(p => p.category === activeCategory);
 
   return (
     <div className="w-full bg-black text-white">
@@ -34,28 +34,28 @@ const Landing: React.FC = () => {
       <section id="home" className="relative h-screen w-full flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-black/60 z-10" />
-          {home.heroVideo ? (
+          {home?.heroVideo ? (
             <video autoPlay muted loop playsInline className="w-full h-full object-cover" key={home.heroVideo} poster={home.heroImage}>
               <source src={home.heroVideo} type="video/mp4" />
             </video>
           ) : (
             <div 
               className="w-full h-full bg-cover bg-center" 
-              style={{ backgroundImage: `url(${home.heroImage})` }}
+              style={{ backgroundImage: `url(${home?.heroImage})` }}
             />
           )}
         </div>
         <div className="relative z-20 text-center space-y-8 px-6">
           <div className="space-y-2">
-            <h1 className="brand-font text-5xl md:text-8xl font-bold tracking-tighter uppercase">{home.title}</h1>
-            <p className="text-xs md:text-sm tracking-[0.5em] text-[#AAAAAA] uppercase">{home.subtitle}</p>
+            <h1 className="brand-font text-5xl md:text-8xl font-bold tracking-tighter uppercase">{home?.title || 'FLIPS'}</h1>
+            <p className="text-xs md:text-sm tracking-[0.5em] text-[#AAAAAA] uppercase">{home?.subtitle || 'Cinematography'}</p>
           </div>
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-[10px] md:text-xs tracking-[0.2em] text-[#AAAAAA]">
-            {home.categories.map((cat, idx) => (
+            {home?.categories?.map((cat, idx) => (
               <span key={idx}>{cat}</span>
             ))}
           </div>
-          <p className="text-[10px] tracking-[0.3em] text-white/50 pt-10 uppercase">{home.location}</p>
+          <p className="text-[10px] tracking-[0.3em] text-white/50 pt-10 uppercase">{home?.location || 'Based in Seoul'}</p>
           <div className="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce">
             <span className="text-lg">↓</span>
           </div>
@@ -96,33 +96,35 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* ABOUT SECTION (Landing 통합) */}
+      {/* ABOUT SECTION */}
       <section id="about" className="py-32 px-6 md:px-12 bg-black border-t border-white/5">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <div 
               className="aspect-[4/5] overflow-hidden bg-zinc-900 mx-auto lg:mx-0 transition-all duration-500"
-              style={{ width: `${about.profileImageSize || 100}%` }}
+              style={{ width: `${about?.profileImageSize || 100}%` }}
             >
-              <img 
-                src={about.profileImage} 
-                alt="Profile" 
-                className="w-full h-full object-cover opacity-90 transition-opacity hover:opacity-100" 
-              />
+              {about?.profileImage && (
+                <img 
+                  src={about.profileImage} 
+                  alt="Profile" 
+                  className="w-full h-full object-cover opacity-90 transition-opacity hover:opacity-100" 
+                />
+              )}
             </div>
             <div className="space-y-8">
               <h2 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase">FLIPS</h2>
               <div className="space-y-6">
                 <p className="text-xl md:text-2xl font-light leading-relaxed tracking-tight text-white">
-                  {about.description1}
+                  {about?.description1}
                 </p>
                 <p className="text-[#AAAAAA] text-sm md:text-base leading-relaxed tracking-wide">
-                  {about.description2}
+                  {about?.description2}
                 </p>
                 <div className="pt-6 space-y-4">
                   <h3 className="text-[10px] tracking-[0.3em] text-white uppercase font-bold">GEAR LIST</h3>
                   <p className="text-[11px] text-[#555555] tracking-widest leading-loose uppercase">
-                    {about.gearList}
+                    {about?.gearList}
                   </p>
                 </div>
               </div>
@@ -138,7 +140,7 @@ const Landing: React.FC = () => {
             <div>
               <h3 className="text-[10px] tracking-[0.3em] text-[#AAAAAA] mb-12 uppercase font-bold">ARTISTS</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {clientData.artists.map(artist => (
+                {clientData?.artists?.map(artist => (
                   <p key={artist} className="text-sm tracking-tight text-[#666]">{artist}</p>
                 ))}
               </div>
@@ -146,7 +148,7 @@ const Landing: React.FC = () => {
             <div>
               <h3 className="text-[10px] tracking-[0.3em] text-[#AAAAAA] mb-12 uppercase font-bold">CLIENTS</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {clientData.clients.map(client => (
+                {clientData?.clients?.map(client => (
                   <p key={client} className="text-sm tracking-tight text-[#666]">
                     {client}
                   </p>
@@ -165,10 +167,10 @@ const Landing: React.FC = () => {
           </header>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
             <div className="space-y-16">
-              <ContactItem label="EMAIL" value={contact.email} href={`mailto:${contact.email}`} />
-              <ContactItem label="INSTAGRAM" value={contact.instagram} href={`https://instagram.com/${contact.instagram.replace('@', '')}`} />
-              <ContactItem label="VIMEO" value={contact.vimeo} href={`https://${contact.vimeo}`} />
-              <ContactItem label="PHONE" value={contact.phone} href={`tel:${contact.phone.replace(/[^0-9]/g, '')}`} />
+              <ContactItem label="EMAIL" value={contact?.email} href={`mailto:${contact?.email}`} />
+              <ContactItem label="INSTAGRAM" value={contact?.instagram} href={`https://instagram.com/${contact?.instagram?.replace('@', '')}`} />
+              <ContactItem label="VIMEO" value={contact?.vimeo} href={`https://${contact?.vimeo}`} />
+              <ContactItem label="PHONE" value={contact?.phone} href={`tel:${contact?.phone?.replace(/[^0-9]/g, '')}`} />
             </div>
             <div className="flex flex-col justify-end">
               <p className="text-[10px] tracking-[0.5em] text-[#555555] uppercase leading-loose text-right">
@@ -188,7 +190,7 @@ const ContactItem: React.FC<{ label: string; value: string; href: string }> = ({
   <div className="space-y-2">
     <p className="text-[10px] tracking-[0.3em] text-[#AAAAAA] uppercase font-bold">{label}</p>
     <a href={href} target="_blank" rel="noreferrer" className="text-2xl md:text-4xl font-light tracking-tight hover:text-[#AAAAAA] transition-all block">
-      {value}
+      {value || 'N/A'}
     </a>
   </div>
 );

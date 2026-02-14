@@ -2,10 +2,11 @@
 import { Project, ContactInfo, HomeInfo, AboutInfo, ClientList } from './types';
 
 export const INITIAL_CATEGORIES: string[] = [
-  'CONCERT BTS',
-  'MUSIC VIDEO BTS',
+  'CONCERT',
+  'MUSIC VIDEO',
   'BROADCAST',
-  'COMMERCIAL'
+  'COMMERCIAL',
+  'BEHIND THE SCENES'
 ];
 
 export const INITIAL_PROJECTS: Project[] = [
@@ -15,43 +16,40 @@ export const INITIAL_PROJECTS: Project[] = [
     title: 'World Tour [H.E.R.E] Behind Film',
     client: 'EDAM Entertainment',
     production: 'FLIPS',
-    category: 'CONCERT BTS',
+    category: 'CONCERT',
     role: 'Cinematographer',
-    company: 'FLIPS',
     camera: 'Sony FX6',
-    year: '2024',
+    year: '2025',
     videoUrl: 'https://player.vimeo.com/video/8248030', 
-    thumbnail: 'https://picsum.photos/id/1/1200/800',
+    thumbnail: 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&q=80&w=1200',
     isSelectedWork: true,
   },
   {
     id: '2',
     artist: 'NewJeans',
-    title: 'Music Bank Live Performance',
+    title: 'Music Bank Behind Film',
     client: 'HYBE / ADOR',
     production: 'KBS',
     category: 'BROADCAST',
     role: 'Cinematographer',
-    company: 'FLIPS',
     camera: 'Sony Venice 2',
     year: '2024',
     videoUrl: 'https://player.vimeo.com/video/8248030',
-    thumbnail: 'https://picsum.photos/id/10/1200/800',
+    thumbnail: 'https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&q=80&w=1200',
     isSelectedWork: true,
   },
   {
     id: '3',
     artist: 'Samsung',
-    title: 'Galaxy S24 Ultra Brand Film',
+    title: 'Galaxy Brand Film',
     client: 'Samsung Electronics',
     production: 'Production A',
     category: 'COMMERCIAL',
     role: 'Cinematographer',
-    company: 'FLIPS',
     camera: 'Arri Alexa Mini LF',
-    year: '2024',
+    year: '2025',
     videoUrl: 'https://player.vimeo.com/video/8248030',
-    thumbnail: 'https://picsum.photos/id/20/1200/800',
+    thumbnail: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=1200',
     isSelectedWork: true,
   }
 ];
@@ -62,25 +60,25 @@ export const INITIAL_HOME_INFO: HomeInfo = {
   title: 'FLIPS',
   subtitle: 'Cinematography',
   location: 'Based in Seoul',
-  categories: ['CONCERT BTS', 'MUSIC VIDEO BTS', 'BROADCAST', 'COMMERCIAL']
+  categories: ['Concert', 'Music Video', 'Broadcast', 'Commercial']
 };
 
 export const INITIAL_ABOUT_INFO: AboutInfo = {
-  profileImage: 'https://picsum.photos/id/101/1200/1500',
+  profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=1200',
   profileImageSize: 100,
   description1: 'FLIPS is a Seoul-based cinematography company specializing in concert, music video, broadcast, and commercial filming.',
-  description2: 'We focus on capturing authentic moments, atmosphere, and emotional energy in live and production environments. Our approach combines technical precision with a documentary-style emotional depth, ensuring that every project resonates with its intended audience.',
-  gearList: 'SONY VENICE 2 / ARRI ALEXA MINI LF / SONY FX6 / SONY FX3 / ARRI SIGNATURE PRIMES / ZEISS SUPREME PRIMES / COOKE S4/i / DZOFILM VESPID PRIMES'
+  description2: 'We focus on capturing authentic moments, atmosphere, and emotional energy in live and production environments.',
+  gearList: 'SONY VENICE 2 / ARRI ALEXA MINI LF / SONY FX6 / SONY FX3 / ARRI SIGNATURE PRIMES / ZEISS SUPREME PRIMES'
 };
 
 export const INITIAL_CLIENT_DATA: ClientList = {
-  artists: ['IU', 'NewJeans', 'IVE', 'TXT', 'LE SSERAFIM', 'BTS', 'AESPA', 'STRAY KIDS'],
-  clients: ['HYBE', 'SM Entertainment', 'YG Entertainment', 'JYP Entertainment', 'KBS', 'MBC', 'SBS', 'Samsung', 'Mnet']
+  artists: ['IU', 'NewJeans', 'IVE', 'TXT', 'BTS', 'AESPA', 'STRAY KIDS', 'LE SSERAFIM'],
+  clients: ['HYBE', 'SM Entertainment', 'YG Entertainment', 'KBS', 'MBC', 'SBS', 'Samsung', 'Production Company Name']
 };
 
 export const INITIAL_CONTACT_INFO: ContactInfo = {
   email: 'contact@flips.com',
-  instagram: '@flips_official',
+  instagram: '@flips',
   vimeo: 'vimeo.com/flips',
-  phone: '010-XXXX-XXXX'
+  phone: '010-xxxx-xxxx'
 };

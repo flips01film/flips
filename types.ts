@@ -9,7 +9,6 @@ export interface Project {
   production: string;
   category: Category;
   role: string;
-  company: string;
   camera: string;
   year: string;
   videoUrl: string; // Vimeo or YouTube URL
@@ -35,7 +34,7 @@ export interface HomeInfo {
 
 export interface AboutInfo {
   profileImage: string;
-  profileImageSize: number; // Width in percentage (e.g., 50 to 100)
+  profileImageSize: number;
   description1: string;
   description2: string;
   gearList: string;

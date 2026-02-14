@@ -1,11 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,62 +14,31 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
-    if (location.pathname === '/' || location.pathname === '') {
-      e.preventDefault();
-      const element = document.getElementById(targetId);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    } else {
-      navigate(`/#${targetId}`);
-    }
-  };
-
   const navLinks = [
-    { name: 'HOME', id: 'home' },
-    { name: 'WORKS', id: 'work' },
+    { name: 'HOME', path: '/' },
+    { name: 'WORK', path: '/work' },
     { name: 'ABOUT', path: '/about' },
-    { name: 'CONTACT', id: 'contact' },
+    { name: 'CONTACT', path: '/contact' },
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 py-6 px-6 md:px-12 flex justify-between items-center ${isScrolled ? 'bg-black/80 backdrop-blur-md' : 'bg-transparent'}`}>
-      <Link to="/" onClick={(e) => handleNavClick(e as any, 'home')} className="brand-font text-xl md:text-2xl font-bold tracking-tighter">
+    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-700 py-8 px-6 md:px-12 flex justify-between items-center ${isScrolled ? 'bg-black/90 backdrop-blur-xl border-b border-white/5 py-5' : 'bg-transparent'}`}>
+      <Link to="/" className="brand-font text-2xl md:text-3xl font-extrabold tracking-tighter">
         FLIPS
       </Link>
       
-      <div className="flex gap-4 md:gap-10 items-center">
+      <div className="flex gap-8 md:gap-12 items-center">
         {navLinks.map((link) => (
-          link.path ? (
-            <Link
-              key={link.name}
-              to={link.path}
-              className={`text-[10px] md:text-xs font-medium tracking-[0.2em] hover:text-white transition-colors uppercase ${
-                location.pathname === link.path ? 'text-white' : 'text-[#AAAAAA]'
-              }`}
-            >
-              {link.name}
-            </Link>
-          ) : (
-            <a
-              key={link.id}
-              href={`/#${link.id}`}
-              onClick={(e) => handleNavClick(e, link.id!)}
-              className={`text-[10px] md:text-xs font-medium tracking-[0.2em] hover:text-white transition-colors text-[#AAAAAA] uppercase`}
-            >
-              {link.name}
-            </a>
-          )
+          <Link
+            key={link.name}
+            to={link.path}
+            className={`text-[10px] md:text-[11px] font-bold tracking-[0.4em] transition-all uppercase ${
+              location.pathname === link.path ? 'text-white' : 'text-[#555] hover:text-[#AAAAAA]'
+            }`}
+          >
+            {link.name}
+          </Link>
         ))}
-        <Link
-          to="/admin"
-          className={`text-[10px] md:text-xs font-medium tracking-[0.2em] hover:text-white transition-colors ${
-            location.pathname === '/admin' ? 'text-white' : 'text-[#333]'
-          } uppercase`}
-        >
-          ADMIN
-        </Link>
       </div>
     </nav>
   );

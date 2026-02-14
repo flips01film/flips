@@ -7,51 +7,44 @@ const About: React.FC = () => {
   const { clientData } = useClientStore();
 
   return (
-    <div className="pt-32 pb-32 px-6 md:px-12 bg-black min-h-screen">
+    <div className="pt-40 pb-40 px-6 md:px-12 bg-black min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <header className="mb-20">
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-4 uppercase">FLIPS</h1>
-          <p className="text-xs tracking-[0.4em] text-[#AAAAAA] uppercase">Cinematography</p>
+        <header className="mb-24">
+          <h1 className="text-6xl md:text-8xl font-bold tracking-tighter mb-4 uppercase">FLIPS</h1>
+          <p className="text-sm tracking-[0.5em] text-[#AAAAAA] uppercase font-light">Cinematography</p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start mb-40">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-32 items-start mb-48">
           <div 
-            className="aspect-[4/5] overflow-hidden bg-zinc-900 mx-auto lg:mx-0 transition-all duration-500"
+            className="aspect-[4/5] overflow-hidden bg-zinc-950 mx-auto lg:mx-0 shadow-2xl"
             style={{ width: `${about.profileImageSize || 100}%` }}
           >
             <img 
               src={about.profileImage} 
               alt="FLIPS Profile" 
-              className="w-full h-full object-cover opacity-90 transition-opacity hover:opacity-100"
+              className="w-full h-full object-cover grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-700"
             />
           </div>
           
-          <div className="space-y-10 py-10">
-            <p className="text-xl md:text-2xl font-light leading-relaxed tracking-tight text-white">
+          <div className="space-y-12">
+            <p className="text-2xl md:text-3xl font-light leading-snug tracking-tight text-white/90">
               {about.description1}
             </p>
-            <p className="text-[#AAAAAA] text-sm md:text-base leading-relaxed tracking-wide">
+            <p className="text-[#AAAAAA] text-sm md:text-base leading-relaxed tracking-wide font-light">
               {about.description2}
             </p>
-            <div className="pt-10 space-y-4">
-              <h3 className="text-[10px] tracking-[0.3em] text-white uppercase font-bold">GEAR WE USE</h3>
-              <p className="text-[11px] text-[#555555] tracking-widest leading-loose uppercase">
-                {about.gearList}
-              </p>
+            <div className="pt-12 space-y-6">
+              <h3 className="text-[10px] tracking-[0.4em] text-white uppercase font-bold">Selected Clients</h3>
+              <div className="grid grid-cols-2 gap-y-4 gap-x-2">
+                {clientData.clients.map(client => (
+                  <p key={client} className="text-sm md:text-base tracking-tight text-white/60 uppercase">
+                    {client}
+                  </p>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-
-        <section className="pt-20 border-t border-white/10">
-          <h2 className="text-[10px] tracking-[0.3em] text-[#AAAAAA] mb-16 uppercase font-bold">SELECTED CLIENTS</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12">
-            {clientData.clients.map(client => (
-              <div key={client} className="text-sm md:text-lg tracking-tight uppercase hover:text-[#555555] transition-colors cursor-default">
-                {client}
-              </div>
-            ))}
-          </div>
-        </section>
       </div>
     </div>
   );

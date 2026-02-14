@@ -10,22 +10,22 @@ interface Props {
 const ProjectCard: React.FC<Props> = ({ project }) => {
   return (
     <Link to={`/work/${project.id}`} className="group block overflow-hidden">
-      <div className="relative aspect-video overflow-hidden bg-[#111]">
+      <div className="relative aspect-[16/10] overflow-hidden bg-zinc-900">
         <img 
           src={project.thumbnail} 
           alt={project.title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-70 group-hover:opacity-100 grayscale group-hover:grayscale-0"
         />
-        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500" />
+        <div className="absolute inset-0 bg-black/30 group-hover:bg-transparent transition-colors duration-500" />
       </div>
       
-      <div className="mt-4 space-y-1">
-        <div className="flex justify-between items-start">
-          <p className="text-[10px] tracking-[0.2em] text-[#AAAAAA] uppercase">{project.artist}</p>
-          <p className="text-[10px] tracking-[0.2em] text-[#555555]">{project.year}</p>
+      <div className="mt-6 space-y-2">
+        <div className="flex justify-between items-baseline">
+          <p className="text-[9px] tracking-[0.4em] text-[#AAAAAA] uppercase font-bold">{project.artist}</p>
+          <p className="text-[9px] tracking-[0.2em] text-[#444444] font-medium">{project.year}</p>
         </div>
-        <h3 className="text-sm font-medium tracking-tight group-hover:translate-x-1 transition-transform duration-300">{project.title}</h3>
-        <p className="text-[9px] tracking-widest text-[#666666] uppercase">{project.category}</p>
+        <h3 className="text-lg font-bold tracking-tighter uppercase leading-tight group-hover:translate-x-2 transition-transform duration-500">{project.title}</h3>
+        <p className="text-[9px] tracking-[0.3em] text-[#555555] uppercase font-bold">{project.category}</p>
       </div>
     </Link>
   );

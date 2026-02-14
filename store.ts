@@ -31,7 +31,11 @@ export const useProjectStore = () => {
     setProjects(prev => prev.filter(p => p.id !== id));
   };
 
-  return { projects, addProject, updateProject, deleteProject };
+  const reorderProjects = (newProjects: Project[]) => {
+    setProjects(newProjects);
+  };
+
+  return { projects, addProject, updateProject, deleteProject, reorderProjects };
 };
 
 export const useHomeStore = () => {

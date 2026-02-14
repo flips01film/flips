@@ -17,7 +17,7 @@ const Admin: React.FC = () => {
   const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState<AdminTab>('PROJECTS');
   
-  const { projects, addProject, updateProject, deleteProject } = useProjectStore();
+  const { projects, addProject, updateProject, deleteProject, reorderProjects } = useProjectStore();
   const { contact, updateContact } = useContactStore();
   const { home, updateHome } = useHomeStore();
   const { about, updateAbout } = useAboutStore();
@@ -95,6 +95,15 @@ const Admin: React.FC = () => {
     setLocalThumbnail(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
     alert('저장되었습니다.');
+  };
+
+  const handleMoveProject = (index: number, direction: 'up' | 'down') => {
+    const newProjects = [...projects];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= newProjects.length) return;
+    
+    [newProjects[index], newProjects[targetIndex]] = [newProjects[targetIndex], newProjects[index]];
+    reorderProjects(newProjects);
   };
 
   const handleSaveHome = (e: React.FormEvent) => {
@@ -232,12 +241,31 @@ const Admin: React.FC = () => {
                 </form>
               </div>
               <div className="lg:col-span-2">
-                <h2 className="text-[11px] tracking-[0.3em] text-[#AAAAAA] mb-8 uppercase font-bold">PROJECT LIST ({projects.length})</h2>
+                <div className="flex justify-between items-end mb-8">
+                  <h2 className="text-[11px] tracking-[0.3em] text-[#AAAAAA] uppercase font-bold">PROJECT LIST ({projects.length})</h2>
+                  <p className="text-[9px] text-[#555] uppercase tracking-widest">ORDER: RECENT (TOP) TO OLD (BOTTOM)</p>
+                </div>
                 <div className="space-y-3">
                   {projects.length === 0 && <p className="text-[#555] text-xs py-20 text-center border border-dashed border-white/10 uppercase tracking-widest">No projects added yet.</p>}
-                  {projects.map(p => (
+                  {projects.map((p, index) => (
                     <div key={p.id} className="bg-zinc-950 p-5 flex justify-between items-center group hover:border-white/20 border border-white/5 transition-all">
                       <div className="flex items-center gap-4">
+                        <div className="flex flex-col gap-1 pr-2 border-r border-white/5 mr-2">
+                          <button 
+                            disabled={index === 0}
+                            onClick={() => handleMoveProject(index, 'up')}
+                            className={`text-[12px] ${index === 0 ? 'text-zinc-800' : 'text-[#555] hover:text-white'} transition-colors`}
+                          >
+                            ▲
+                          </button>
+                          <button 
+                            disabled={index === projects.length - 1}
+                            onClick={() => handleMoveProject(index, 'down')}
+                            className={`text-[12px] ${index === projects.length - 1 ? 'text-zinc-800' : 'text-[#555] hover:text-white'} transition-colors`}
+                          >
+                            ▼
+                          </button>
+                        </div>
                         <div className="w-16 h-10 bg-zinc-900 overflow-hidden hidden sm:block">
                           <img src={p.thumbnail} className="w-full h-full object-cover grayscale" alt="" />
                         </div>

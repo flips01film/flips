@@ -5,11 +5,14 @@ import { useProjectStore, useHomeStore, useClientStore } from '../store';
 import ProjectCard from '../components/ProjectCard';
 
 const Home: React.FC = () => {
-  const { projects } = useProjectStore();
+  const { projects = [] } = useProjectStore();
   const { home } = useHomeStore();
   const { clientData } = useClientStore();
   
   const selectedWorks = projects.filter(p => p.isSelectedWork).slice(0, 6);
+  const heroCategories = home?.categories || [];
+  const artists = clientData?.artists || [];
+  const clients = clientData?.clients || [];
 
   return (
     <div className="w-full bg-black">
@@ -17,26 +20,30 @@ const Home: React.FC = () => {
       <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-black/50 z-10" />
-          <img 
-            src={home.heroImage} 
-            alt="Hero Background"
-            className="w-full h-full object-cover transition-opacity duration-1000"
-          />
+          {home?.heroImage ? (
+            <img 
+              src={home.heroImage} 
+              alt="Hero Background"
+              className="w-full h-full object-cover transition-opacity duration-1000"
+            />
+          ) : (
+            <div className="w-full h-full bg-zinc-950" />
+          )}
         </div>
 
         <div className="relative z-20 text-center space-y-12 px-6">
           <div className="space-y-4">
-            <h1 className="brand-font text-6xl md:text-9xl font-extrabold tracking-tighter uppercase leading-none">{home.title}</h1>
-            <p className="text-sm md:text-base tracking-[0.6em] text-white/80 uppercase font-light">{home.subtitle}</p>
+            <h1 className="brand-font text-6xl md:text-9xl font-extrabold tracking-tighter uppercase leading-none">{home?.title || 'FLIPS'}</h1>
+            <p className="text-sm md:text-base tracking-[0.6em] text-white/80 uppercase font-light">{home?.subtitle || 'Cinematography'}</p>
           </div>
           
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-[10px] md:text-xs tracking-[0.3em] text-[#AAAAAA] uppercase">
-            {home.categories.map((cat, idx) => (
+            {heroCategories.map((cat, idx) => (
               <span key={idx}>{cat}</span>
             ))}
           </div>
 
-          <p className="text-[10px] tracking-[0.4em] text-white/40 pt-16 uppercase">{home.location}</p>
+          <p className="text-[10px] tracking-[0.4em] text-white/40 pt-16 uppercase">{home?.location || 'SEOUL'}</p>
           
           <div className="absolute bottom-12 left-1/2 -translate-x-1/2 opacity-30 animate-pulse">
             <span className="text-2xl font-light">↓</span>
@@ -53,9 +60,13 @@ const Home: React.FC = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
-            {selectedWorks.map(project => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
+            {selectedWorks.length > 0 ? (
+              selectedWorks.map(project => (
+                <ProjectCard key={project.id} project={project} />
+              ))
+            ) : (
+              <p className="text-[10px] tracking-widest text-[#333] uppercase">No featured works yet.</p>
+            )}
           </div>
         </div>
       </section>
@@ -69,7 +80,7 @@ const Home: React.FC = () => {
             <div>
               <h3 className="text-[10px] tracking-[0.3em] text-[#AAAAAA] mb-16 uppercase font-bold border-l-2 border-white/20 pl-4">Artists</h3>
               <div className="grid grid-cols-2 gap-y-6 gap-x-4">
-                {clientData.artists.map(artist => (
+                {artists.map(artist => (
                   <p key={artist} className="text-lg md:text-xl font-light tracking-tight hover:text-[#AAAAAA] transition-colors cursor-default">{artist}</p>
                 ))}
               </div>
@@ -78,7 +89,7 @@ const Home: React.FC = () => {
             <div>
               <h3 className="text-[10px] tracking-[0.3em] text-[#AAAAAA] mb-16 uppercase font-bold border-l-2 border-white/20 pl-4">Clients</h3>
               <div className="grid grid-cols-2 gap-y-6 gap-x-4">
-                {clientData.clients.map(client => (
+                {clients.map(client => (
                   <p key={client} className="text-lg md:text-xl font-light tracking-tight hover:text-[#AAAAAA] transition-colors cursor-default">{client}</p>
                 ))}
               </div>
@@ -91,7 +102,7 @@ const Home: React.FC = () => {
       <section className="py-40 px-6 md:px-12 flex flex-col items-center text-center">
         <Link to="/contact" className="group">
           <h2 className="text-5xl md:text-8xl font-bold tracking-tighter mb-4 uppercase group-hover:opacity-60 transition-opacity">Contact</h2>
-          <p className="text-[10px] tracking-[0.5em] text-[#555] uppercase">Email / Instagram</p>
+          <p className="text-[10px] tracking-[0.5em] text-[#555] uppercase">Email / Instagram / Phone</p>
         </Link>
       </section>
     </div>

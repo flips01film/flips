@@ -3,6 +3,19 @@ import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useProjectStore } from '../store';
 
+const getEmbedUrl = (url: string) => {
+  if (!url) return '';
+  // YouTube
+  const ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([\w-]{11})/);
+  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}`;
+  
+  // Vimeo
+  const vimeoMatch = url.match(/(?:vimeo\.com\/|player\.vimeo\.com\/video\/)(\d+)/);
+  if (vimeoMatch) return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+  
+  return url;
+};
+
 const ProjectDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -21,18 +34,26 @@ const ProjectDetail: React.FC = () => {
     );
   }
 
+  const embedUrl = getEmbedUrl(project.videoUrl);
+
   return (
     <div className="bg-black min-h-screen pb-40">
       {/* Video Hero */}
       <section className="w-full aspect-video bg-zinc-950 video-container">
-        <iframe 
-          src={`${project.videoUrl}?autoplay=0&title=0&byline=0&portrait=0`} 
-          frameBorder="0" 
-          allow="autoplay; fullscreen; picture-in-picture" 
-          allowFullScreen
-          title={project.title}
-          className="w-full h-full"
-        ></iframe>
+        {embedUrl ? (
+          <iframe 
+            src={`${embedUrl}?autoplay=0&title=0&byline=0&portrait=0`} 
+            frameBorder="0" 
+            allow="autoplay; fullscreen; picture-in-picture" 
+            allowFullScreen
+            title={project.title}
+            className="w-full h-full"
+          ></iframe>
+        ) : (
+          <div className="w-full h-full flex items-center justify-center border border-white/5">
+            <p className="text-[10px] tracking-widest text-[#333] uppercase">No Video Provided</p>
+          </div>
+        )}
       </section>
 
       {/* Content Section */}

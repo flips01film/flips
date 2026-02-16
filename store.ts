@@ -10,11 +10,18 @@ import {
   INITIAL_CATEGORIES
 } from './constants';
 
+const safeParse = (key: string, fallback: any) => {
+  try {
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) : fallback;
+  } catch (e) {
+    console.error(`Error parsing localStorage key "${key}":`, e);
+    return fallback;
+  }
+};
+
 export const useCategoryStore = () => {
-  const [categories, setCategories] = useState<string[]>(() => {
-    const saved = localStorage.getItem('flips_categories');
-    return saved ? JSON.parse(saved) : INITIAL_CATEGORIES;
-  });
+  const [categories, setCategories] = useState<string[]>(() => safeParse('flips_categories', INITIAL_CATEGORIES));
 
   useEffect(() => {
     localStorage.setItem('flips_categories', JSON.stringify(categories));
@@ -30,124 +37,68 @@ export const useCategoryStore = () => {
     setCategories(prev => prev.filter(c => c !== name));
   };
 
-  const updateCategories = (newList: string[]) => {
-    setCategories(newList);
-  };
-
-  return { categories, addCategory, deleteCategory, updateCategories };
+  return { categories, addCategory, deleteCategory };
 };
 
 export const useProjectStore = () => {
-  const [projects, setProjects] = useState<Project[]>(() => {
-    const saved = localStorage.getItem('flips_projects');
-    return saved ? JSON.parse(saved) : INITIAL_PROJECTS;
-  });
+  const [projects, setProjects] = useState<Project[]>(() => safeParse('flips_projects', INITIAL_PROJECTS));
 
   useEffect(() => {
     localStorage.setItem('flips_projects', JSON.stringify(projects));
   }, [projects]);
 
-  const addProject = (project: Project) => {
-    setProjects(prev => [project, ...prev]);
-  };
+  const addProject = (project: Project) => setProjects(prev => [project, ...prev]);
+  const updateProject = (id: string, updated: Project) => setProjects(prev => prev.map(p => p.id === id ? updated : p));
+  const deleteProject = (id: string) => setProjects(prev => prev.filter(p => p.id !== id));
 
-  const updateProject = (id: string, updated: Project) => {
-    setProjects(prev => prev.map(p => p.id === id ? updated : p));
-  };
-
-  const deleteProject = (id: string) => {
-    setProjects(prev => prev.filter(p => p.id !== id));
-  };
-
-  const reorderProjects = (newProjects: Project[]) => {
-    setProjects(newProjects);
-  };
-
-  return { projects, addProject, updateProject, deleteProject, reorderProjects };
+  return { projects, addProject, updateProject, deleteProject };
 };
 
 export const useHomeStore = () => {
-  const [home, setHome] = useState<HomeInfo>(() => {
-    const saved = localStorage.getItem('flips_home');
-    return saved ? JSON.parse(saved) : INITIAL_HOME_INFO;
-  });
-
-  useEffect(() => {
-    localStorage.setItem('flips_home', JSON.stringify(home));
-  }, [home]);
-
-  const updateHome = (newHome: HomeInfo) => setHome(newHome);
-  return { home, updateHome };
+  const [home, setHome] = useState<HomeInfo>(() => safeParse('flips_home', INITIAL_HOME_INFO));
+  useEffect(() => { localStorage.setItem('flips_home', JSON.stringify(home)); }, [home]);
+  return { home, updateHome: setHome };
 };
 
 export const useAboutStore = () => {
-  const [about, setAbout] = useState<AboutInfo>(() => {
-    const saved = localStorage.getItem('flips_about');
-    return saved ? JSON.parse(saved) : INITIAL_ABOUT_INFO;
-  });
-
-  useEffect(() => {
-    localStorage.setItem('flips_about', JSON.stringify(about));
-  }, [about]);
-
-  const updateAbout = (newAbout: AboutInfo) => setAbout(newAbout);
-  return { about, updateAbout };
+  const [about, setAbout] = useState<AboutInfo>(() => safeParse('flips_about', INITIAL_ABOUT_INFO));
+  useEffect(() => { localStorage.setItem('flips_about', JSON.stringify(about)); }, [about]);
+  return { about, updateAbout: setAbout };
 };
 
 export const useClientStore = () => {
-  const [clientData, setClientData] = useState<ClientList>(() => {
-    const saved = localStorage.getItem('flips_clients');
-    return saved ? JSON.parse(saved) : INITIAL_CLIENT_DATA;
-  });
-
-  useEffect(() => {
-    localStorage.setItem('flips_clients', JSON.stringify(clientData));
-  }, [clientData]);
-
-  const updateClients = (newClients: ClientList) => setClientData(newClients);
-  return { clientData, updateClients };
+  const [clientData, setClientData] = useState<ClientList>(() => safeParse('flips_clients', INITIAL_CLIENT_DATA));
+  useEffect(() => { localStorage.setItem('flips_clients', JSON.stringify(clientData)); }, [clientData]);
+  return { clientData, updateClients: setClientData };
 };
 
 export const useContactStore = () => {
-  const [contact, setContact] = useState<ContactInfo>(() => {
-    const saved = localStorage.getItem('flips_contact');
-    return saved ? JSON.parse(saved) : INITIAL_CONTACT_INFO;
-  });
-
-  useEffect(() => {
-    localStorage.setItem('flips_contact', JSON.stringify(contact));
-  }, [contact]);
-
-  const updateContact = (newContact: ContactInfo) => {
-    setContact(newContact);
-  };
-
-  return { contact, updateContact };
+  const [contact, setContact] = useState<ContactInfo>(() => safeParse('flips_contact', INITIAL_CONTACT_INFO));
+  useEffect(() => { localStorage.setItem('flips_contact', JSON.stringify(contact)); }, [contact]);
+  return { contact, updateContact: setContact };
 };
 
 export const syncAppData = (jsonString: string) => {
   try {
     const data = JSON.parse(jsonString);
-    if (data.projects) localStorage.setItem('flips_projects', JSON.stringify(data.projects));
-    if (data.categories) localStorage.setItem('flips_categories', JSON.stringify(data.categories));
-    if (data.home) localStorage.setItem('flips_home', JSON.stringify(data.home));
-    if (data.about) localStorage.setItem('flips_about', JSON.stringify(data.about));
-    if (data.clients) localStorage.setItem('flips_clients', JSON.stringify(data.clients));
-    if (data.contact) localStorage.setItem('flips_contact', JSON.stringify(data.contact));
+    const keys = ['projects', 'categories', 'home', 'about', 'clients', 'contact'];
+    keys.forEach(key => {
+      if (data[key]) localStorage.setItem(`flips_${key}`, JSON.stringify(data[key]));
+    });
     window.location.reload();
   } catch (e) {
-    alert('Invalid Sync Code. Please check the data format.');
+    alert('Invalid Sync Code.');
   }
 };
 
 export const exportAppData = () => {
   const data = {
-    projects: JSON.parse(localStorage.getItem('flips_projects') || '[]'),
-    categories: JSON.parse(localStorage.getItem('flips_categories') || '[]'),
-    home: JSON.parse(localStorage.getItem('flips_home') || '{}'),
-    about: JSON.parse(localStorage.getItem('flips_about') || '{}'),
-    clients: JSON.parse(localStorage.getItem('flips_clients') || '{}'),
-    contact: JSON.parse(localStorage.getItem('flips_contact') || '{}'),
+    projects: safeParse('flips_projects', INITIAL_PROJECTS),
+    categories: safeParse('flips_categories', INITIAL_CATEGORIES),
+    home: safeParse('flips_home', INITIAL_HOME_INFO),
+    about: safeParse('flips_about', INITIAL_ABOUT_INFO),
+    clients: safeParse('flips_clients', INITIAL_CLIENT_DATA),
+    contact: safeParse('flips_contact', INITIAL_CONTACT_INFO),
   };
   return JSON.stringify(data);
 };

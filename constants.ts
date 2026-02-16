@@ -60,13 +60,13 @@ export const INITIAL_HOME_INFO: HomeInfo = {
   title: 'FLIPS',
   subtitle: 'Cinematography',
   location: 'Based in Seoul',
-  categories: ['Concert', 'Music Video', 'Broadcast', 'Commercial']
+  categories: ['Concert', 'Music Video BTS', 'Broadcast', 'Commercial']
 };
 
 export const INITIAL_ABOUT_INFO: AboutInfo = {
   profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=1200',
   profileImageSize: 100,
-  description1: 'FLIPS is a Seoul-based cinematography company specializing in concert, music video, broadcast, and commercial filming.',
+  description1: 'FLIPS is a Seoul-based cinematography company specializing in concert, music video BTS, broadcast, and commercial filming.',
   description2: 'We focus on capturing authentic moments, atmosphere, and emotional energy in live and production environments.',
   gearList: 'SONY VENICE 2 / ARRI ALEXA MINI LF / SONY FX6 / SONY FX3 / ARRI SIGNATURE PRIMES / ZEISS SUPREME PRIMES'
 };

@@ -45,7 +45,6 @@ const ProjectDetail: React.FC = () => {
           
           <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10 md:gap-y-16 pt-12 md:pt-16 border-t border-white/5">
              <InfoBlock label="Client" value={project.client} />
-             <InfoBlock label="Production" value={project.production} />
              <InfoBlock label="Category" value={project.category} />
              <InfoBlock label="Role" value={project.role} />
              <InfoBlock label="Camera" value={project.camera} />

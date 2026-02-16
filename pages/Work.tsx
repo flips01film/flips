@@ -19,7 +19,7 @@ const Work: React.FC = () => {
     <div className="pt-40 pb-40 px-6 md:px-12 bg-black min-h-screen">
       <div className="max-w-7xl mx-auto">
         <header className="mb-24">
-          <h1 className="text-6xl md:text-8xl font-bold tracking-tighter mb-16 uppercase">WORK</h1>
+          <h1 className="text-6xl md:text-8xl font-bold tracking-tighter mb-16 uppercase">WORKS</h1>
           
           <div className="flex flex-wrap gap-x-10 gap-y-6">
             {filterOptions.map((cat) => (

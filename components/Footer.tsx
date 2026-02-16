@@ -18,7 +18,7 @@ const Footer: React.FC = () => {
             <h3 className="text-[9px] tracking-[0.4em] text-[#AAAAAA] font-bold uppercase">Navigate</h3>
             <ul className="space-y-2">
               <li><Link to="/" className="text-[10px] tracking-widest hover:text-white text-[#555] transition-colors uppercase">Home</Link></li>
-              <li><Link to="/work" className="text-[10px] tracking-widest hover:text-white text-[#555] transition-colors uppercase">Work</Link></li>
+              <li><Link to="/work" className="text-[10px] tracking-widest hover:text-white text-[#555] transition-colors uppercase">Works</Link></li>
               <li><Link to="/about" className="text-[10px] tracking-widest hover:text-white text-[#555] transition-colors uppercase">About</Link></li>
             </ul>
           </div>
@@ -26,8 +26,7 @@ const Footer: React.FC = () => {
           <div className="space-y-4">
             <h3 className="text-[9px] tracking-[0.4em] text-[#AAAAAA] font-bold uppercase">Social</h3>
             <ul className="space-y-2">
-              <li><a href="https://instagram.com/flips" target="_blank" rel="noreferrer" className="text-[10px] tracking-widest hover:text-white text-[#555] transition-colors uppercase">Instagram</a></li>
-              <li><a href="https://vimeo.com/flips" target="_blank" rel="noreferrer" className="text-[10px] tracking-widest hover:text-white text-[#555] transition-colors uppercase">Vimeo</a></li>
+              <li><a href="https://instagram.com/flips_film" target="_blank" rel="noreferrer" className="text-[10px] tracking-widest hover:text-white text-[#555] transition-colors uppercase">Instagram</a></li>
             </ul>
           </div>
 

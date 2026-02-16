@@ -14,9 +14,9 @@ const ProjectCard: React.FC<Props> = ({ project }) => {
         <img 
           src={project.thumbnail} 
           alt={project.title}
-          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-70 group-hover:opacity-100 grayscale group-hover:grayscale-0"
+          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-90 group-hover:opacity-100"
         />
-        <div className="absolute inset-0 bg-black/30 group-hover:bg-transparent transition-colors duration-500" />
+        <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
       </div>
       
       <div className="mt-6 space-y-2">

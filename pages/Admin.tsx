@@ -55,7 +55,7 @@ const Admin: React.FC = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === '1111') setIsAuthenticated(true);
+    if (password === '6718') setIsAuthenticated(true);
     else alert('Wrong password');
   };
 
@@ -166,7 +166,7 @@ const Admin: React.FC = () => {
                   <div className="space-y-2">
                     <label className="text-[9px] text-[#555] font-bold uppercase tracking-widest">Category</label>
                     <select name="category" defaultValue={editingProject?.category} className="w-full bg-zinc-900 border border-white/10 p-4 text-xs text-white outline-none focus:border-white/30 uppercase tracking-widest">
-                      {['CONCERT BTS', 'MUSIC VIDEO BTS', 'BROADCAST', 'COMMERCIAL', 'BEHIND THE SCENES', ...categories].map(c => <option key={c} value={c}>{c}</option>)}
+                      {[ ...categories].map(c => <option key={c} value={c}>{c}</option>)}
                     </select>
                   </div>
                   <div className="grid grid-cols-2 gap-4">

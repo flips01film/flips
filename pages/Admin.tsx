@@ -28,7 +28,7 @@ const Admin: React.FC = () => {
   const { categories, addCategory, deleteCategory } = useCategoryStore();
 
   const [editingProject, setEditingProject] = useState<Project | null>(null);
-  const [thumbnailBase64, setThumbnailBase64] = useState<string>('');
+  const [thumbnailInput, setThumbnailInput] = useState<string>('');
   
   // Local drafts for forms to prevent unnecessary store updates during typing
   const [contactDraft, setContactDraft] = useState<ContactInfo>(contact);
@@ -47,9 +47,9 @@ const Admin: React.FC = () => {
 
   useEffect(() => {
     if (editingProject) {
-      setThumbnailBase64(editingProject.thumbnail || '');
+      setThumbnailInput(editingProject.thumbnail || '');
     } else {
-      setThumbnailBase64('');
+      setThumbnailInput('');
     }
   }, [editingProject]);
 
@@ -65,7 +65,7 @@ const Admin: React.FC = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64 = reader.result as string;
-        if (target === 'thumbnail') setThumbnailBase64(base64);
+        if (target === 'thumbnail') setThumbnailInput(base64);
         else if (target === 'about') {
           setAboutProfileBase64(base64);
           setAboutDraft(prev => ({ ...prev, profileImage: base64 }));
@@ -81,7 +81,7 @@ const Admin: React.FC = () => {
   const handleProjectSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    if (!thumbnailBase64) return alert('Please upload a thumbnail image.');
+    if (!thumbnailInput) return alert('Please provide a thumbnail (URL or Upload).');
 
     const data: Partial<Project> = {
       artist: formData.get('artist') as string,
@@ -93,7 +93,7 @@ const Admin: React.FC = () => {
       camera: formData.get('camera') as string,
       year: formData.get('year') as string,
       videoUrl: formData.get('videoUrl') as string,
-      thumbnail: thumbnailBase64,
+      thumbnail: thumbnailInput,
       isSelectedWork: formData.get('isSelectedWork') === 'on',
     };
 
@@ -104,7 +104,7 @@ const Admin: React.FC = () => {
       addProject({ ...data as Project, id: Date.now().toString() });
     }
     e.currentTarget.reset();
-    setThumbnailBase64('');
+    setThumbnailInput('');
     alert('Project Saved');
   };
 
@@ -114,7 +114,6 @@ const Admin: React.FC = () => {
         <form onSubmit={handleLogin} className="max-w-sm w-full space-y-8">
           <div className="text-center space-y-4">
             <h1 className="text-3xl font-extrabold tracking-tighter uppercase">ADMIN</h1>
-            <p className="text-[9px] text-[#555] tracking-[0.5em] font-bold uppercase">Enter Password: 1111</p>
           </div>
           <input
             type="password"
@@ -175,11 +174,36 @@ const Admin: React.FC = () => {
                   </div>
                   <AdminInput name="camera" label="Camera" defaultValue={editingProject?.camera} />
                   <AdminInput name="videoUrl" label="Video URL" defaultValue={editingProject?.videoUrl} />
-                  <div className="space-y-4">
-                    <label className="text-[9px] text-[#555] uppercase tracking-widest font-bold">Thumbnail</label>
-                    <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, 'thumbnail')} className="w-full bg-zinc-900 border border-white/10 p-4 text-[9px] file:bg-white file:text-black file:border-none file:px-2 file:py-1 file:mr-4 font-bold" />
-                    {thumbnailBase64 && <img src={thumbnailBase64} className="w-full aspect-video object-cover border border-white/10" />}
+                  
+                  <div className="space-y-4 pt-4 border-t border-white/5">
+                    <h3 className="text-[10px] tracking-widest font-bold uppercase text-white/40">Thumbnail Setting</h3>
+                    <div className="space-y-2">
+                      <label className="text-[9px] text-[#555] uppercase tracking-widest font-bold">Thumbnail URL</label>
+                      <input 
+                        type="text" 
+                        value={thumbnailInput} 
+                        onChange={(e) => setThumbnailInput(e.target.value)} 
+                        placeholder="https://example.com/image.jpg"
+                        className="w-full bg-zinc-900 border border-white/10 p-4 text-xs text-white outline-none focus:border-white/30 tracking-widest"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[9px] text-[#555] uppercase tracking-widest font-bold">Or Upload File</label>
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={(e) => handleFileChange(e, 'thumbnail')} 
+                        className="w-full bg-zinc-900 border border-white/10 p-4 text-[9px] file:bg-white file:text-black file:border-none file:px-2 file:py-1 file:mr-4 font-bold" 
+                      />
+                    </div>
+                    {thumbnailInput && (
+                      <div className="space-y-2">
+                        <label className="text-[9px] text-[#555] uppercase tracking-widest font-bold">Preview</label>
+                        <img src={thumbnailInput} className="w-full aspect-video object-cover border border-white/10" alt="Thumbnail Preview" />
+                      </div>
+                    )}
                   </div>
+
                   <div className="flex items-center gap-4 bg-zinc-900/50 p-4 border border-white/5">
                     <input type="checkbox" name="isSelectedWork" id="featured" defaultChecked={editingProject?.isSelectedWork} className="w-5 h-5 accent-white" />
                     <label htmlFor="featured" className="text-[10px] tracking-widest uppercase font-bold text-[#AAA]">Feature on Home</label>
@@ -187,7 +211,7 @@ const Admin: React.FC = () => {
                   <div className="flex gap-2">
                     <button type="submit" className="flex-grow bg-white text-black py-4 text-xs font-bold tracking-widest uppercase">{editingProject ? 'Update' : 'Publish'}</button>
                     {editingProject && (
-                      <button type="button" onClick={() => { setEditingProject(null); setThumbnailBase64(''); }} className="bg-zinc-800 text-white px-6 text-xs font-bold uppercase">Cancel</button>
+                      <button type="button" onClick={() => { setEditingProject(null); setThumbnailInput(''); }} className="bg-zinc-800 text-white px-6 text-xs font-bold uppercase">Cancel</button>
                     )}
                   </div>
                 </form>

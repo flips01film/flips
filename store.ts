@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Project, ContactInfo, HomeInfo, AboutInfo, ClientList } from './types';
 import { 
@@ -57,8 +58,22 @@ export const useProjectStore = () => {
   const addProject = (project: Project) => setProjects(prev => [project, ...prev]);
   const updateProject = (id: string, updated: Project) => setProjects(prev => prev.map(p => p.id === id ? updated : p));
   const deleteProject = (id: string) => setProjects(prev => prev.filter(p => p.id !== id));
+  
+  const moveProject = (id: string, direction: 'up' | 'down') => {
+    setProjects(prev => {
+      const index = prev.findIndex(p => p.id === id);
+      if (index === -1) return prev;
+      if (direction === 'up' && index === 0) return prev;
+      if (direction === 'down' && index === prev.length - 1) return prev;
 
-  return { projects: projects || [], addProject, updateProject, deleteProject };
+      const newProjects = [...prev];
+      const targetIndex = direction === 'up' ? index - 1 : index + 1;
+      [newProjects[index], newProjects[targetIndex]] = [newProjects[targetIndex], newProjects[index]];
+      return newProjects;
+    });
+  };
+
+  return { projects: projects || [], addProject, updateProject, deleteProject, moveProject };
 };
 
 export const useHomeStore = () => {

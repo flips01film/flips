@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   useProjectStore, 
@@ -20,7 +20,7 @@ const Admin: React.FC = () => {
   const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState<AdminTab>('PROJECTS');
   
-  const { projects, addProject, updateProject, deleteProject } = useProjectStore();
+  const { projects, addProject, updateProject, deleteProject, moveProject } = useProjectStore();
   const { contact, updateContact } = useContactStore();
   const { home, updateHome } = useHomeStore();
   const { about, updateAbout } = useAboutStore();
@@ -157,7 +157,7 @@ const Admin: React.FC = () => {
         <main className="min-h-[500px]">
           {activeTab === 'PROJECTS' && (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-              <div className="lg:col-span-5 bg-zinc-950 p-6 md:p-10 rounded-sm border border-white/5">
+              <div className="lg:col-span-5 bg-zinc-950 p-6 md:p-10 rounded-sm border border-white/5 h-fit sticky top-24">
                 <form onSubmit={handleProjectSave} className="space-y-6">
                   <div className="grid grid-cols-2 gap-4">
                     <AdminInput name="artist" label="Artist" defaultValue={editingProject?.artist} required />
@@ -166,7 +166,7 @@ const Admin: React.FC = () => {
                   <div className="space-y-2">
                     <label className="text-[9px] text-[#555] font-bold uppercase tracking-widest">Category</label>
                     <select name="category" defaultValue={editingProject?.category} className="w-full bg-zinc-900 border border-white/10 p-4 text-xs text-white outline-none focus:border-white/30 uppercase tracking-widest">
-                      {['CONCERT', 'MUSIC VIDEO', 'BROADCAST', 'COMMERCIAL', 'BEHIND THE SCENES', ...categories].map(c => <option key={c} value={c}>{c}</option>)}
+                      {['CONCERT BTS', 'MUSIC VIDEO BTS', 'BROADCAST', 'COMMERCIAL', 'BEHIND THE SCENES', ...categories].map(c => <option key={c} value={c}>{c}</option>)}
                     </select>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -184,22 +184,44 @@ const Admin: React.FC = () => {
                     <input type="checkbox" name="isSelectedWork" id="featured" defaultChecked={editingProject?.isSelectedWork} className="w-5 h-5 accent-white" />
                     <label htmlFor="featured" className="text-[10px] tracking-widest uppercase font-bold text-[#AAA]">Feature on Home</label>
                   </div>
-                  <button type="submit" className="w-full bg-white text-black py-4 text-xs font-bold tracking-widest uppercase">{editingProject ? 'Update' : 'Publish'}</button>
+                  <div className="flex gap-2">
+                    <button type="submit" className="flex-grow bg-white text-black py-4 text-xs font-bold tracking-widest uppercase">{editingProject ? 'Update' : 'Publish'}</button>
+                    {editingProject && (
+                      <button type="button" onClick={() => { setEditingProject(null); setThumbnailBase64(''); }} className="bg-zinc-800 text-white px-6 text-xs font-bold uppercase">Cancel</button>
+                    )}
+                  </div>
                 </form>
               </div>
               <div className="lg:col-span-7 space-y-4">
-                {projects.map(p => (
-                  <div key={p.id} className="bg-zinc-950 p-5 flex justify-between items-center border border-white/5">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-[10px] tracking-[0.3em] text-[#555] font-bold uppercase">Project List ({projects.length})</h2>
+                  <p className="text-[8px] text-[#333] tracking-widest uppercase">Use arrows to reorder</p>
+                </div>
+                {projects.map((p, idx) => (
+                  <div key={p.id} className="bg-zinc-950 p-5 flex justify-between items-center border border-white/5 group hover:border-white/20 transition-all">
                     <div className="flex items-center gap-6">
-                      <img src={p.thumbnail} className="w-16 md:w-20 aspect-video object-cover grayscale opacity-50" />
+                      <div className="flex flex-col gap-1">
+                        <button 
+                          disabled={idx === 0} 
+                          onClick={() => moveProject(p.id, 'up')}
+                          className={`text-xs ${idx === 0 ? 'text-zinc-800' : 'text-[#555] hover:text-white'}`}
+                        >▲</button>
+                        <button 
+                          disabled={idx === projects.length - 1} 
+                          onClick={() => moveProject(p.id, 'down')}
+                          className={`text-xs ${idx === projects.length - 1 ? 'text-zinc-800' : 'text-[#555] hover:text-white'}`}
+                        >▼</button>
+                      </div>
+                      <img src={p.thumbnail} className="w-16 md:w-20 aspect-video object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all" />
                       <div>
                         <p className="text-[9px] text-[#555] uppercase tracking-widest">{p.category} | {p.year}</p>
                         <h3 className="text-xs font-bold uppercase truncate max-w-[150px] md:max-w-none">{p.artist} — {p.title}</h3>
+                        {p.isSelectedWork && <span className="text-[8px] text-white/30 border border-white/10 px-1 mt-1 inline-block uppercase tracking-tighter">Featured</span>}
                       </div>
                     </div>
                     <div className="flex gap-4">
                       <button onClick={() => { setEditingProject(p); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-[9px] text-[#AAA] hover:text-white uppercase font-bold tracking-widest">Edit</button>
-                      <button onClick={() => deleteProject(p.id)} className="text-[9px] text-red-900 hover:text-red-500 uppercase font-bold tracking-widest">Del</button>
+                      <button onClick={() => { if(confirm('Delete project?')) deleteProject(p.id); }} className="text-[9px] text-red-900 hover:text-red-500 uppercase font-bold tracking-widest">Del</button>
                     </div>
                   </div>
                 ))}

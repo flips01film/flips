@@ -9,7 +9,7 @@ const Home: React.FC = () => {
   const { home } = useHomeStore();
   const { clientData } = useClientStore();
   
-  const selectedWorks = projects.filter(p => p.isSelectedWork).slice(0, 6);
+  const selectedWorks = projects.filter(p => p?.isSelectedWork).slice(0, 6);
   const heroCategories = home?.categories || [];
   const artists = clientData?.artists || [];
   const clients = clientData?.clients || [];
@@ -33,8 +33,12 @@ const Home: React.FC = () => {
 
         <div className="relative z-20 text-center space-y-12 px-6">
           <div className="space-y-4">
-            <h1 className="brand-font text-6xl md:text-9xl font-extrabold tracking-tighter uppercase leading-none">{home?.title || 'FLIPS'}</h1>
-            <p className="text-sm md:text-base tracking-[0.6em] text-white/80 uppercase font-light">{home?.subtitle || 'Cinematography'}</p>
+            <h1 className="brand-font text-6xl md:text-9xl font-extrabold tracking-tighter uppercase leading-none">
+              {home?.title || 'FLIPS'}
+            </h1>
+            <p className="text-sm md:text-base tracking-[0.6em] text-white/80 uppercase font-light">
+              {home?.subtitle || 'Cinematography'}
+            </p>
           </div>
           
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-[10px] md:text-xs tracking-[0.3em] text-[#AAAAAA] uppercase">
@@ -43,7 +47,9 @@ const Home: React.FC = () => {
             ))}
           </div>
 
-          <p className="text-[10px] tracking-[0.4em] text-white/40 pt-16 uppercase">{home?.location || 'SEOUL'}</p>
+          <p className="text-[10px] tracking-[0.4em] text-white/40 pt-16 uppercase">
+            {home?.location || 'SEOUL'}
+          </p>
           
           <div className="absolute bottom-12 left-1/2 -translate-x-1/2 opacity-30 animate-pulse">
             <span className="text-2xl font-light">↓</span>
@@ -65,7 +71,9 @@ const Home: React.FC = () => {
                 <ProjectCard key={project.id} project={project} />
               ))
             ) : (
-              <p className="text-[10px] tracking-widest text-[#333] uppercase">No featured works yet.</p>
+              <div className="col-span-full py-20 text-center border border-dashed border-white/5">
+                 <p className="text-[10px] tracking-widest text-[#333] uppercase">No featured works available.</p>
+              </div>
             )}
           </div>
         </div>
@@ -80,18 +88,18 @@ const Home: React.FC = () => {
             <div>
               <h3 className="text-[10px] tracking-[0.3em] text-[#AAAAAA] mb-16 uppercase font-bold border-l-2 border-white/20 pl-4">Artists</h3>
               <div className="grid grid-cols-2 gap-y-6 gap-x-4">
-                {artists.map(artist => (
+                {artists.length > 0 ? artists.map(artist => (
                   <p key={artist} className="text-lg md:text-xl font-light tracking-tight hover:text-[#AAAAAA] transition-colors cursor-default">{artist}</p>
-                ))}
+                )) : <p className="text-zinc-800 text-xs">TBA</p>}
               </div>
             </div>
             
             <div>
               <h3 className="text-[10px] tracking-[0.3em] text-[#AAAAAA] mb-16 uppercase font-bold border-l-2 border-white/20 pl-4">Clients</h3>
               <div className="grid grid-cols-2 gap-y-6 gap-x-4">
-                {clients.map(client => (
+                {clients.length > 0 ? clients.map(client => (
                   <p key={client} className="text-lg md:text-xl font-light tracking-tight hover:text-[#AAAAAA] transition-colors cursor-default">{client}</p>
-                ))}
+                )) : <p className="text-zinc-800 text-xs">TBA</p>}
               </div>
             </div>
           </div>

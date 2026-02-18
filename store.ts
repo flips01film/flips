@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Project, ContactInfo, HomeInfo, AboutInfo, ClientList } from './types';
 import { 
@@ -13,23 +12,28 @@ import {
 const safeParse = (key: string, fallback: any) => {
   try {
     const item = localStorage.getItem(key);
-    return item ? JSON.parse(item) : fallback;
+    if (!item || item === 'undefined' || item === 'null') return fallback;
+    const parsed = JSON.parse(item);
+    return parsed !== null && parsed !== undefined ? parsed : fallback;
   } catch (e) {
-    console.error(`Error parsing localStorage key "${key}":`, e);
+    console.error(`Store parsing error [${key}]:`, e);
     return fallback;
   }
 };
 
 export const useCategoryStore = () => {
-  const [categories, setCategories] = useState<string[]>(() => safeParse('flips_categories', INITIAL_CATEGORIES));
+  const [categories, setCategories] = useState<string[]>(() => {
+    const data = safeParse('flips_categories', INITIAL_CATEGORIES);
+    return Array.isArray(data) ? data : INITIAL_CATEGORIES;
+  });
 
   useEffect(() => {
     localStorage.setItem('flips_categories', JSON.stringify(categories));
   }, [categories]);
 
   const addCategory = (name: string) => {
-    if (!categories.includes(name)) {
-      setCategories(prev => [...prev, name]);
+    if (name && !categories.includes(name)) {
+      setCategories(prev => [...prev, name.toUpperCase()]);
     }
   };
 
@@ -37,11 +41,14 @@ export const useCategoryStore = () => {
     setCategories(prev => prev.filter(c => c !== name));
   };
 
-  return { categories, addCategory, deleteCategory };
+  return { categories: categories || [], addCategory, deleteCategory };
 };
 
 export const useProjectStore = () => {
-  const [projects, setProjects] = useState<Project[]>(() => safeParse('flips_projects', INITIAL_PROJECTS));
+  const [projects, setProjects] = useState<Project[]>(() => {
+    const data = safeParse('flips_projects', INITIAL_PROJECTS);
+    return Array.isArray(data) ? data : INITIAL_PROJECTS;
+  });
 
   useEffect(() => {
     localStorage.setItem('flips_projects', JSON.stringify(projects));
@@ -51,31 +58,31 @@ export const useProjectStore = () => {
   const updateProject = (id: string, updated: Project) => setProjects(prev => prev.map(p => p.id === id ? updated : p));
   const deleteProject = (id: string) => setProjects(prev => prev.filter(p => p.id !== id));
 
-  return { projects, addProject, updateProject, deleteProject };
+  return { projects: projects || [], addProject, updateProject, deleteProject };
 };
 
 export const useHomeStore = () => {
   const [home, setHome] = useState<HomeInfo>(() => safeParse('flips_home', INITIAL_HOME_INFO));
   useEffect(() => { localStorage.setItem('flips_home', JSON.stringify(home)); }, [home]);
-  return { home, updateHome: setHome };
+  return { home: home || INITIAL_HOME_INFO, updateHome: setHome };
 };
 
 export const useAboutStore = () => {
   const [about, setAbout] = useState<AboutInfo>(() => safeParse('flips_about', INITIAL_ABOUT_INFO));
   useEffect(() => { localStorage.setItem('flips_about', JSON.stringify(about)); }, [about]);
-  return { about, updateAbout: setAbout };
+  return { about: about || INITIAL_ABOUT_INFO, updateAbout: setAbout };
 };
 
 export const useClientStore = () => {
   const [clientData, setClientData] = useState<ClientList>(() => safeParse('flips_clients', INITIAL_CLIENT_DATA));
   useEffect(() => { localStorage.setItem('flips_clients', JSON.stringify(clientData)); }, [clientData]);
-  return { clientData, updateClients: setClientData };
+  return { clientData: clientData || INITIAL_CLIENT_DATA, updateClients: setClientData };
 };
 
 export const useContactStore = () => {
   const [contact, setContact] = useState<ContactInfo>(() => safeParse('flips_contact', INITIAL_CONTACT_INFO));
   useEffect(() => { localStorage.setItem('flips_contact', JSON.stringify(contact)); }, [contact]);
-  return { contact, updateContact: setContact };
+  return { contact: contact || INITIAL_CONTACT_INFO, updateContact: setContact };
 };
 
 export const syncAppData = (jsonString: string) => {
@@ -87,7 +94,7 @@ export const syncAppData = (jsonString: string) => {
     });
     window.location.reload();
   } catch (e) {
-    alert('Invalid Sync Code.');
+    alert('Sync error: Data format is invalid.');
   }
 };
 

@@ -2,8 +2,8 @@
 import { Project, ContactInfo, HomeInfo, AboutInfo, ClientList } from './types';
 
 export const INITIAL_CATEGORIES: string[] = [
-  'CONCERT',
-  'MUSIC VIDEO',
+  'CONCERT BTS',
+  'MUSIC VIDEO BTS',
   'BROADCAST',
   'COMMERCIAL',
   'BEHIND THE SCENES'
@@ -119,7 +119,7 @@ export const INITIAL_PROJECTS: Project[] = [
     camera: 'Sony FX6',
     year: '2025',
     videoUrl: 'https://youtu.be/WrTdTLH00V8?si=H_aj6qsGclPXk0kt', 
-    thumbnail: 'https://i.ytimg.com/vi/WrTdTLH00V8/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&amp;rs=AOn4CLBTbOlFt_sTJENRZHYWLasyJfFbHg',
+    thumbnail: 'https://i.ytimg.com/vi/f40hz7CbpsA/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&amp;rs=AOn4CLB8HaE8PjTfmtR8YniWmD84AG1VWQ',
     isSelectedWork: true,
   },
        {
